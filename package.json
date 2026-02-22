@@ -1,17 +1,45 @@
 {
   "name": "@elvatis/openclaw-gpu-bridge",
   "version": "0.1.0",
-  "description": "OpenClaw plugin — Remote GPU compute via FastAPI microservice",
+  "description": "OpenClaw plugin — Remote GPU compute via FastAPI microservice (BERTScore, embeddings)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "gpu-service/",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": ["openclaw", "openclaw-plugin", "gpu", "bert-score", "ml", "remote-compute"],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "gpu",
+    "bert-score",
+    "embeddings",
+    "ml",
+    "remote-compute",
+    "sentence-transformers",
+    "roberta"
+  ],
   "author": "Elvatis <hello@elvatis.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/homeofe/openclaw-gpu-bridge.git"
+  },
+  "homepage": "https://github.com/homeofe/openclaw-gpu-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/homeofe/openclaw-gpu-bridge/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "@types/node": "^20.0.0",
