@@ -41,3 +41,12 @@
 - **Plugin manifest updated:** config schema with `models.embed`/`models.bertscore` + uiHints
 - **gpu-service/README.md:** Windows setup guide, env vars, AMD ROCm future note
 - Removed ROCm Dockerfile / requirements-rocm.txt (not needed for v0.1)
+
+## 2026-02-22 — v0.1 Complete + Live Test
+
+- AAHP P1-P4 complete (commits d94bce4 → 7cc0fda)
+- Live test: Emre's RTX 2080 Ti at 192.168.177.3 — CUDA detected, /health OK, /bertscore F1=0.9645
+- /info bug fixed: total_mem → total_memory
+- Verbose logging added: timing per request, VRAM stats
+- Plugin currently NOT in openclaw.json (pre-npm-publish, using direct HTTP for test)
+- v0.2 planned: multi-GPU host pool with load balancing + failover
