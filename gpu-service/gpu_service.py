@@ -41,6 +41,7 @@ async def lifespan(app: FastAPI):
     app.state.bert_scorer = BERTScorer(
         model_type=model_bertscore, device=str(device), lang="en"
     )
+    app.state.bertscore_model_name = model_bertscore
     app.state.loaded_models.append(f"bertscore:{model_bertscore}")
 
     # Load embedding model
@@ -48,6 +49,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"Loading embedding model: {model_embed}")
     from sentence_transformers import SentenceTransformer
     app.state.embedder = SentenceTransformer(model_embed, device=str(device))
+    app.state.embed_model_name = model_embed
     app.state.loaded_models.append(f"embed:{model_embed}")
 
     logger.info(f"GPU service ready — device={device}, models={app.state.loaded_models}")
@@ -98,7 +100,7 @@ async def bertscore(req: BertScoreRequest, request: Request):
             precision=P.tolist(),
             recall=R.tolist(),
             f1=F1.tolist(),
-            model=req.model_type,
+            model=request.app.state.bertscore_model_name,
         )
     finally:
         semaphore.release()
@@ -116,7 +118,7 @@ async def embed(req: EmbedRequest, request: Request):
         vecs = embedder.encode(req.texts, convert_to_numpy=True)
         return EmbedResponse(
             embeddings=vecs.tolist(),
-            model=req.model,
+            model=request.app.state.embed_model_name,
             dimensions=vecs.shape[1],
         )
     finally:
