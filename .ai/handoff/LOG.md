@@ -1,5 +1,15 @@
 # openclaw-gpu-bridge — Log
 
+## 2026-02-22 — P4 Discussion Round (Sonnet Reviewer)
+
+- **Full code review** of all 7 source files against ADR and checklist
+- **TypeScript plugin:** All 4 tools (gpu_health, gpu_info, gpu_bertscore, gpu_embed) correctly map to FastAPI endpoints. Timeout handling (AbortController + clearTimeout), X-API-Key header injection, and error wrapping all correct. `tsc --noEmit` → 0 errors.
+- **Python service:** GPU detection (`torch.cuda.is_available()`), lifespan model pre-loading, semaphore backpressure (semaphore.acquire with wait_for timeout=1.0), Pydantic v2 syntax, and `/health` endpoint all verified correct.
+- **Security:** X-API-Key middleware correctly guards non-health endpoints; no injection risks found; model names not user-controllable.
+- **Critical bug found and fixed:** `scorer.score()` and `embedder.encode()` were blocking synchronous GPU operations called directly in async FastAPI handlers — freezing the asyncio event loop during inference. Fixed by wrapping both calls with `asyncio.to_thread()`, making inference non-blocking.
+- **Commit:** `cf96278` — `fix(review): P4 fixes — asyncio.to_thread for non-blocking GPU inference [AAHP-P4]`
+- **REVIEW.md written** with full checklist results and detailed bug analysis
+
 ## 2026-02-22 — Project Initialized
 
 - Repo cloned from github.com/homeofe/openclaw-gpu-bridge
