@@ -95,7 +95,8 @@ async def bertscore(req: BertScoreRequest, request: Request):
 
     try:
         scorer: "BERTScorer" = request.app.state.bert_scorer  # noqa: F821
-        P, R, F1 = scorer.score(req.candidates, req.references)
+        # Run blocking GPU inference in a thread pool so the event loop stays responsive
+        P, R, F1 = await asyncio.to_thread(scorer.score, req.candidates, req.references)
         return BertScoreResponse(
             precision=P.tolist(),
             recall=R.tolist(),
@@ -115,7 +116,8 @@ async def embed(req: EmbedRequest, request: Request):
 
     try:
         embedder = request.app.state.embedder
-        vecs = embedder.encode(req.texts, convert_to_numpy=True)
+        # Run blocking GPU inference in a thread pool so the event loop stays responsive
+        vecs = await asyncio.to_thread(embedder.encode, req.texts, convert_to_numpy=True)
         return EmbedResponse(
             embeddings=vecs.tolist(),
             model=request.app.state.embed_model_name,
