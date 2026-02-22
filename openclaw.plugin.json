@@ -7,10 +7,41 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-      "serviceUrl": { "type": "string", "description": "URL of the FastAPI GPU service" },
-      "timeout": { "type": "number", "default": 120 },
-      "apiKey": { "type": "string", "description": "Optional API key for auth" }
+      "serviceUrl": {
+        "type": "string",
+        "description": "URL of the FastAPI GPU service (e.g. http://192.168.1.100:8765)"
+      },
+      "timeout": {
+        "type": "number",
+        "default": 45,
+        "description": "HTTP request timeout in seconds"
+      },
+      "apiKey": {
+        "type": "string",
+        "description": "Optional API key for authentication"
+      },
+      "models": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "embed": {
+            "type": "string",
+            "default": "all-MiniLM-L6-v2",
+            "description": "Sentence-transformers model for embeddings"
+          },
+          "bertscore": {
+            "type": "string",
+            "default": "roberta-large",
+            "description": "Model for BERTScore computation"
+          }
+        }
+      }
     },
     "required": ["serviceUrl"]
+  },
+  "uiHints": {
+    "serviceUrl": { "label": "GPU Service URL", "placeholder": "http://192.168.1.100:8765" },
+    "apiKey": { "label": "API Key", "sensitive": true },
+    "timeout": { "label": "Timeout (seconds)" }
   }
 }

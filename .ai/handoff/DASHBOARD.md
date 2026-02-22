@@ -1,24 +1,9 @@
-# openclaw-gpu-bridge — Dashboard
+# DASHBOARD — openclaw-gpu-bridge
 
-> Phase: P0 (initialized)
-
-## Plugin Structure
-
-| File                        | Status   |
-| --------------------------- | -------- |
-| README.md                   | ✅ Done  |
-| package.json                | ⏳ Todo  |
-| tsconfig.json               | ⏳ Todo  |
-| openclaw.plugin.json        | ⏳ Todo  |
-| src/index.ts                | ⏳ Todo  |
-| gpu-service/gpu_service.py  | ⏳ Todo  |
-| gpu-service/requirements.txt| ⏳ Todo  |
-| tests/                      | ⏳ Todo  |
-
-## Agent Tools
-
-| Tool              | Status   | Description                    |
-| ----------------- | -------- | ------------------------------ |
-| bertscore_compute | ⏳ Todo  | Compute BERTScore via GPU      |
-| embed_text        | ⏳ Todo  | Generate text embeddings       |
-| gpu_health        | ⏳ Todo  | Check GPU service availability |
+| Phase | Status | Agent | Date |
+|---|---|---|---|
+| P1 Research | ✅ Done | Sonar | 2026-02-22 |
+| P2 Architecture | ✅ Done | Opus | 2026-02-22 |
+| P3 Implementation | ⏳ Next | Sonnet | — |
+| P4 Integration Test | 📋 Planned | — | — |
+| P5 Publish | 📋 Planned | — | — |
