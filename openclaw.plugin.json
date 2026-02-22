@@ -1,0 +1,16 @@
+{
+  "id": "openclaw-gpu-bridge",
+  "name": "GPU Bridge",
+  "description": "Offload GPU-intensive ML tasks (BERTScore, embeddings) to a remote machine",
+  "version": "0.1.0",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "serviceUrl": { "type": "string", "description": "URL of the FastAPI GPU service" },
+      "timeout": { "type": "number", "default": 120 },
+      "apiKey": { "type": "string", "description": "Optional API key for auth" }
+    },
+    "required": ["serviceUrl"]
+  }
+}
