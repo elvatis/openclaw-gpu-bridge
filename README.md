@@ -1,4 +1,4 @@
-# @elvatis/openclaw-gpu-bridge
+# @elvatis_com/openclaw-gpu-bridge
 
 **OpenClaw plugin** — Offload GPU-intensive ML tasks (BERTScore, text embeddings) to a remote machine running a FastAPI microservice. No GPU required on the OpenClaw server.
 
@@ -168,7 +168,7 @@ If `"device": "cpu"` appears, PyTorch is not using your GPU. Re-check your CUDA/
 ### Install
 
 ```bash
-openclaw plugins install @elvatis/openclaw-gpu-bridge
+openclaw plugins install @elvatis_com/openclaw-gpu-bridge
 ```
 
 ### Configuration
@@ -178,7 +178,7 @@ Add to your OpenClaw config (or configure via the UI):
 ```json
 {
   "plugins": {
-    "@elvatis/openclaw-gpu-bridge": {
+    "@elvatis_com/openclaw-gpu-bridge": {
       "serviceUrl": "http://192.168.1.100:8765",
       "timeout": 45,
       "apiKey": "your-secret-key",
