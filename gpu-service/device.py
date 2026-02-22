@@ -32,7 +32,7 @@ def get_device_info(device: torch.device) -> dict:
     }
     if device.type == "cuda":
         info["device_name"] = torch.cuda.get_device_name(0)
-        mem = torch.cuda.get_device_properties(0).total_mem
+        mem = torch.cuda.get_device_properties(0).total_memory
         info["vram_total_mb"] = round(mem / 1024 / 1024)
         info["vram_used_mb"] = round(torch.cuda.memory_allocated(0) / 1024 / 1024)
     else:

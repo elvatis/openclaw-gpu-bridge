@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import os
+import time
 from contextlib import asynccontextmanager
 
 import torch
@@ -16,8 +17,21 @@ from models import (
     HealthResponse, InfoResponse,
 )
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S",
+)
 logger = logging.getLogger("gpu-service")
-logging.basicConfig(level=logging.INFO)
+
+
+def _vram_mb() -> str:
+    """Return current VRAM usage string, e.g. '412 MB / 11264 MB'."""
+    if not torch.cuda.is_available():
+        return "CPU"
+    used = round(torch.cuda.memory_allocated(0) / 1024 / 1024)
+    total = round(torch.cuda.get_device_properties(0).total_memory / 1024 / 1024)
+    return f"{used} MB / {total} MB VRAM"
 
 # --- Concurrency guard ---
 MAX_CONCURRENT = int(os.environ.get("GPU_MAX_CONCURRENT", "2"))
@@ -36,23 +50,33 @@ async def lifespan(app: FastAPI):
 
     # Load BERTScore (lazy — bert_score caches internally, but we warm it)
     model_bertscore = os.environ.get("MODEL_BERTSCORE", "roberta-large")
-    logger.info(f"Loading BERTScore model: {model_bertscore}")
+    logger.info(f"Loading BERTScore model: {model_bertscore} ...")
+    t0 = time.time()
     from bert_score import BERTScorer
     app.state.bert_scorer = BERTScorer(
         model_type=model_bertscore, device=str(device), lang="en"
     )
     app.state.bertscore_model_name = model_bertscore
     app.state.loaded_models.append(f"bertscore:{model_bertscore}")
+    logger.info(f"BERTScore ready ({time.time()-t0:.1f}s) — {_vram_mb()}")
 
     # Load embedding model
     model_embed = os.environ.get("MODEL_EMBED", "all-MiniLM-L6-v2")
-    logger.info(f"Loading embedding model: {model_embed}")
+    logger.info(f"Loading embedding model: {model_embed} ...")
+    t0 = time.time()
     from sentence_transformers import SentenceTransformer
     app.state.embedder = SentenceTransformer(model_embed, device=str(device))
     app.state.embed_model_name = model_embed
     app.state.loaded_models.append(f"embed:{model_embed}")
+    logger.info(f"Embedder ready ({time.time()-t0:.1f}s) — {_vram_mb()}")
 
-    logger.info(f"GPU service ready — device={device}, models={app.state.loaded_models}")
+    logger.info("=" * 55)
+    logger.info(f"  OpenClaw GPU Bridge ready!")
+    logger.info(f"  Device : {device} ({torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'})")
+    logger.info(f"  Models : {', '.join(app.state.loaded_models)}")
+    logger.info(f"  VRAM   : {_vram_mb()}")
+    logger.info(f"  URL    : http://0.0.0.0:8765")
+    logger.info("=" * 55)
     yield
 
 
@@ -95,8 +119,13 @@ async def bertscore(req: BertScoreRequest, request: Request):
 
     try:
         scorer: "BERTScorer" = request.app.state.bert_scorer  # noqa: F821
-        # Run blocking GPU inference in a thread pool so the event loop stays responsive
+        n = len(req.candidates)
+        logger.info(f"[bertscore] {n} pair(s) — {_vram_mb()}")
+        t0 = time.time()
         P, R, F1 = await asyncio.to_thread(scorer.score, req.candidates, req.references)
+        elapsed = time.time() - t0
+        avg_f1 = sum(F1.tolist()) / len(F1)
+        logger.info(f"[bertscore] done in {elapsed:.2f}s — avg F1={avg_f1:.4f} — {_vram_mb()}")
         return BertScoreResponse(
             precision=P.tolist(),
             recall=R.tolist(),
@@ -116,8 +145,12 @@ async def embed(req: EmbedRequest, request: Request):
 
     try:
         embedder = request.app.state.embedder
-        # Run blocking GPU inference in a thread pool so the event loop stays responsive
+        n = len(req.texts)
+        logger.info(f"[embed] {n} text(s) — {_vram_mb()}")
+        t0 = time.time()
         vecs = await asyncio.to_thread(embedder.encode, req.texts, convert_to_numpy=True)
+        elapsed = time.time() - t0
+        logger.info(f"[embed] done in {elapsed:.2f}s — {vecs.shape[1]}d vectors — {_vram_mb()}")
         return EmbedResponse(
             embeddings=vecs.tolist(),
             model=request.app.state.embed_model_name,
