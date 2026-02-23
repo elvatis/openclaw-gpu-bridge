@@ -1,0 +1,30 @@
+# Node / TypeScript
+node_modules/
+dist/
+*.js.map
+*.log
+
+# Python GPU service
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+*.egg
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
