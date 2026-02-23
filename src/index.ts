@@ -26,6 +26,15 @@ export default function (api: any) {
   });
 
   api.registerTool({
+    name: "gpu_status",
+    description: "Get queue and job progress from the remote GPU service",
+    parameters: { type: "object", properties: {}, required: [] },
+    async execute() {
+      return tools.status();
+    },
+  });
+
+  api.registerTool({
     name: "gpu_bertscore",
     description:
       "Compute BERTScore between candidate and reference texts. Returns precision, recall, and F1 arrays.",
@@ -48,7 +57,11 @@ export default function (api: any) {
         },
         model_type: {
           type: "string",
-          description: "BERTScore model (default: roberta-large)",
+          description: "BERTScore model (optional, default: microsoft/deberta-xlarge-mnli)",
+        },
+        model: {
+          type: "string",
+          description: "Alias for model_type (optional)",
         },
       },
       required: ["candidates", "references"],
@@ -72,7 +85,7 @@ export default function (api: any) {
         },
         model: {
           type: "string",
-          description: "Embedding model (default: all-MiniLM-L6-v2)",
+          description: "Embedding model (optional, default: all-MiniLM-L6-v2)",
         },
       },
       required: ["texts"],

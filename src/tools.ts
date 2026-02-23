@@ -32,14 +32,28 @@ export function createTools(config: GpuBridgeConfig) {
       }
     },
 
-    async bertscore(_id: string, params: { candidates: string[]; references: string[]; lang?: string; model_type?: string }) {
+    async status() {
       try {
-        return jsonResult(await client.bertscore({
-          candidates: params.candidates,
-          references: params.references,
-          lang: params.lang ?? "en",
-          model_type: params.model_type ?? config.models?.bertscore ?? "roberta-large",
-        }));
+        return jsonResult(await client.status());
+      } catch (e) {
+        return errorResult(e);
+      }
+    },
+
+    async bertscore(
+      _id: string,
+      params: { candidates: string[]; references: string[]; lang?: string; model_type?: string; model?: string },
+    ) {
+      try {
+        return jsonResult(
+          await client.bertscore({
+            candidates: params.candidates,
+            references: params.references,
+            lang: params.lang ?? "en",
+            model_type:
+              params.model_type ?? params.model ?? config.models?.bertscore ?? "microsoft/deberta-xlarge-mnli",
+          }),
+        );
       } catch (e) {
         return errorResult(e);
       }
@@ -47,10 +61,12 @@ export function createTools(config: GpuBridgeConfig) {
 
     async embed(_id: string, params: { texts: string[]; model?: string }) {
       try {
-        return jsonResult(await client.embed({
-          texts: params.texts,
-          model: params.model ?? config.models?.embed ?? "all-MiniLM-L6-v2",
-        }));
+        return jsonResult(
+          await client.embed({
+            texts: params.texts,
+            model: params.model ?? config.models?.embed ?? "all-MiniLM-L6-v2",
+          }),
+        );
       } catch (e) {
         return errorResult(e);
       }

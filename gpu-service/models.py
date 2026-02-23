@@ -7,7 +7,7 @@ class BertScoreRequest(BaseModel):
     candidates: list[str]
     references: list[str]
     lang: str = "en"
-    model_type: str = "roberta-large"
+    model_type: str = "microsoft/deberta-xlarge-mnli"
 
 
 class BertScoreResponse(BaseModel):
@@ -41,3 +41,24 @@ class InfoResponse(BaseModel):
     pytorch_version: str
     cuda_version: str | None = None
     loaded_models: list[str] = Field(default_factory=list)
+
+
+class QueueStatus(BaseModel):
+    max_concurrent: int
+    in_flight: int
+    available_slots: int
+    waiting_estimate: int
+
+
+class JobStatus(BaseModel):
+    id: str
+    type: str
+    started_at: str
+    items: int
+    model: str
+    progress: float
+
+
+class StatusResponse(BaseModel):
+    queue: QueueStatus
+    active_jobs: list[JobStatus] = Field(default_factory=list)

@@ -1,5 +1,33 @@
 # openclaw-gpu-bridge — Log
 
+## 2026-02-23 — v0.2 Multi-GPU Implementation (Sonnet)
+
+- Implemented **multi-host config** in TypeScript client: `hosts[]` with per-host `apiKey`, plus v0.1 compatibility fallback (`serviceUrl` / `url`).
+- Added host orchestration logic:
+  - health state tracking per host
+  - load balancing: `round-robin` and `least-busy` (VRAM usage from `/info`)
+  - automatic failover to next host when request fails
+  - periodic health checks (`healthCheckIntervalSeconds`)
+- Added `gpu_status` tool and `/status` client support.
+- Updated plugin schema (`openclaw.plugin.json`) to v0.2.0 and documented new fields.
+- Upgraded defaults to requested models:
+  - embed: `all-MiniLM-L6-v2`
+  - bertscore: `microsoft/deberta-xlarge-mnli`
+- Reworked Python GPU service (v0.2):
+  - on-demand model loading + in-memory cache for BERTScore and embedding models
+  - new `/status` endpoint with queue + active jobs + progress
+  - embed batch processing with progress logs
+  - active job tracking with UUIDs and timestamps
+- Added TypeScript unit tests for multi-host logic (`src/client.test.ts`):
+  - legacy single-host compatibility
+  - host failover behavior
+  - least-busy host selection
+- Added Jest config (`jest.config.cjs`).
+- Validation:
+  - `npm run build` ✅
+  - `npm test` ✅ (3/3)
+
+
 ## 2026-02-22 — P4 Discussion Round (Sonnet Reviewer)
 
 - **Full code review** of all 7 source files against ADR and checklist

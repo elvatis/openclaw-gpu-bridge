@@ -1,9 +1,25 @@
 // GPU Bridge — Shared TypeScript types
 
-export interface GpuBridgeConfig {
-  serviceUrl: string;
-  timeout?: number;
+export type LoadBalancingStrategy = "round-robin" | "least-busy";
+
+export interface GpuHostConfig {
+  url: string;
+  name?: string;
   apiKey?: string;
+}
+
+export interface GpuBridgeConfig {
+  /** v0.2 preferred config */
+  hosts?: GpuHostConfig[];
+
+  /** v0.1 compatibility */
+  serviceUrl?: string;
+  url?: string;
+  apiKey?: string;
+
+  timeout?: number;
+  healthCheckIntervalSeconds?: number;
+  loadBalancing?: LoadBalancingStrategy;
   models?: {
     embed?: string;
     bertscore?: string;
@@ -50,4 +66,21 @@ export interface EmbedResponse {
   embeddings: number[][];
   model: string;
   dimensions: number;
+}
+
+export interface StatusResponse {
+  queue: {
+    max_concurrent: number;
+    in_flight: number;
+    available_slots: number;
+    waiting_estimate: number;
+  };
+  active_jobs: Array<{
+    id: string;
+    type: "embed" | "bertscore";
+    started_at: string;
+    items: number;
+    model: string;
+    progress: number;
+  }>;
 }
