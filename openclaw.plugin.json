@@ -75,11 +75,7 @@
         }
       }
     },
-    "anyOf": [
-      { "required": ["hosts"] },
-      { "required": ["serviceUrl"] },
-      { "required": ["url"] }
-    ]
+    "description": "Configuration is optional. If no hosts/serviceUrl/url is set, tools will fail with a clear 'not configured' error instead of blocking plugin install."
   },
   "uiHints": {
     "serviceUrl": { "label": "GPU Service URL (legacy)", "placeholder": "http://192.168.1.100:8765" },
