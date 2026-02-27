@@ -8,6 +8,13 @@ export interface GpuHostConfig {
   apiKey?: string;
 }
 
+export interface InputLimits {
+  /** Max number of items per batch (candidates, references, texts). Default: 100 */
+  maxBatchSize?: number;
+  /** Max character length per individual text. Default: 10000 */
+  maxTextLength?: number;
+}
+
 export interface GpuBridgeConfig {
   /** v0.2 preferred config */
   hosts?: GpuHostConfig[];
@@ -24,6 +31,9 @@ export interface GpuBridgeConfig {
     embed?: string;
     bertscore?: string;
   };
+
+  /** Configurable limits to prevent GPU OOM on large batches */
+  limits?: InputLimits;
 }
 
 // --- Responses ---
