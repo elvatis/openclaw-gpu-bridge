@@ -49,19 +49,19 @@
 |-------|-------|--------|----------|
 | TypeScript unit (Jest) | 11 | (Verified) passing | 2026-02-27 |
 | TypeScript integration (Jest) | 10 | (Verified) passing | 2026-02-27 |
-| Python (pytest) | 0 | Not configured | - |
+| Python (pytest) | 60 | ✅ All passing | 2026-02-27 |
 
 ---
 
 ## v0.2 Roadmap - GitHub Issues
 
-| Issue | Title | Labels | Priority |
-|-------|-------|--------|----------|
-| [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | Add input size validation to prevent GPU OOM on large batches | enhancement | HIGH |
-| [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | Add Python unit tests for gpu-service (pytest) | enhancement | MEDIUM |
-| [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | TS client should honor Retry-After header on 503 responses | bug | HIGH |
-| [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | Dockerfile uses outdated PyTorch base image (2.2.0 vs required 2.5.0+) | bug | MEDIUM |
-| [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | gpu-service README has stale defaults and missing /status endpoint | documentation | LOW |
+| Issue | Title | Labels | Priority | Status |
+|-------|-------|--------|----------|--------|
+| [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | Add input size validation to prevent GPU OOM on large batches | enhancement | HIGH | Open |
+| [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | Add Python unit tests for gpu-service (pytest) | enhancement | MEDIUM | Done |
+| [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | TS client should honor Retry-After header on 503 responses | bug | HIGH | Open |
+| [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | Dockerfile uses outdated PyTorch base image (2.2.0 vs required 2.5.0+) | bug | MEDIUM | Done |
+| [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | gpu-service README has stale defaults and missing /status endpoint | documentation | LOW | Done |
 
 ---
 
@@ -69,6 +69,14 @@
 
 | ID | Task | Priority | Blocked by | Ready? |
 |----|------|----------|-----------|--------|
-| T-001 | Live multi-host validation | HIGH | - | Done |
-| T-002 | Publish npm package v0.2.0 | HIGH | T-001 | Done (pending npm auth) |
-| T-003 | Python unit tests (optional) - see [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | MEDIUM | - | Ready |
+| - | (no open tasks) | - | - | - |
+
+## Completed Tasks
+
+| ID | Task | Completed |
+|----|------|-----------|
+| T-001 | Live multi-host validation | 2026-02-27 |
+| T-002 | Publish npm package v0.2.0 | 2026-02-27 |
+| T-003 | Python unit tests for gpu-service (60 tests) | 2026-02-27 |
+| T-004 | Fix Dockerfile: update PyTorch base image to 2.5.x | 2026-02-27 |
+| T-005 | Fix stale README: wrong default model and missing endpoints | 2026-02-27 |
