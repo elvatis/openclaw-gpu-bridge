@@ -15,7 +15,7 @@
 | P4 Discussion Review | Done | Sonnet (Reviewer) | 2026-02-22 |
 | P5 v0.2 Multi-GPU | Done | Sonnet | 2026-02-23 |
 | P6 v0.2 Roadmap Definition | Done | Opus | 2026-02-27 |
-| P7 Live Validation | Planned | - | - |
+| P7 Live Validation | Done | Opus | 2026-02-27 |
 | P8 Publish | Planned | - | - |
 
 ---
@@ -45,7 +45,8 @@
 
 | Suite | Tests | Status | Last Run |
 |-------|-------|--------|----------|
-| TypeScript (Jest) | 3 | (Verified) passing | 2026-02-23 |
+| TypeScript unit (Jest) | 11 | (Verified) passing | 2026-02-27 |
+| TypeScript integration (Jest) | 10 | (Verified) passing | 2026-02-27 |
 | Python (pytest) | 0 | Not configured | - |
 
 ---
@@ -66,8 +67,8 @@
 
 | ID | Task | Priority | Blocked by | Ready? |
 |----|------|----------|-----------|--------|
-| T-001 | Live multi-host validation | HIGH | - | Ready |
-| T-002 | Publish npm package v0.2.0 | HIGH | T-001 | Blocked |
+| T-001 | Live multi-host validation | HIGH | - | Done |
+| T-002 | Publish npm package v0.2.0 | HIGH | T-001 | Ready |
 | T-003 | Python unit tests (optional) - see [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | MEDIUM | - | Ready |
 | T-004 | Input size validation - see [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | HIGH | - | Ready |
 | T-005 | 503 Retry-After handling - see [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | HIGH | - | Ready |

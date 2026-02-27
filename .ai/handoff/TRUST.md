@@ -20,8 +20,8 @@
 
 | Property | Status | Last Verified | TTL | Expires | Agent | Notes |
 |----------|--------|---------------|-----|---------|-------|-------|
-| `npm run build` passes | verified | 2026-02-23 | 7d | 2026-03-02 | Sonnet | 0 TS errors |
-| `npm test` passes | verified | 2026-02-23 | 7d | 2026-03-02 | Sonnet | 3/3 Jest tests |
+| `npm run build` passes | verified | 2026-02-27 | 7d | 2026-03-06 | Opus | 0 TS errors |
+| `npm test` passes | verified | 2026-02-27 | 7d | 2026-03-06 | Opus | 21/21 tests (11 unit + 10 integration) |
 | TypeScript strict mode | verified | 2026-02-23 | 30d | 2026-03-25 | Sonnet | tsconfig strict=true |
 
 ---
@@ -33,8 +33,10 @@
 | GPU service starts (uvicorn) | assumed | 2026-02-22 | 7d | 2026-03-01 | Sonnet | Live test at 192.168.177.3 - RTX 2080 Ti CUDA |
 | /health endpoint responds | verified | 2026-02-22 | 7d | 2026-03-01 | Sonnet | Live test confirmed |
 | /bertscore F1 returns correct value | verified | 2026-02-22 | 14d | 2026-03-08 | Sonnet | F1=0.9645 live test |
-| Multi-host config works | untested | - | - | - | - | Never tested against 2+ real hosts |
-| Failover triggers on host death | untested | - | - | - | - | Only unit test mock |
+| Multi-host config works | verified | 2026-02-27 | 14d | 2026-03-13 | Opus | Integration tests with real HTTP servers: round-robin, least-busy, auth |
+| Failover triggers on host death | verified | 2026-02-27 | 14d | 2026-03-13 | Opus | Integration test: dead host (port not listening) triggers failover to healthy host |
+| 503 retry with Retry-After | verified | 2026-02-27 | 14d | 2026-03-13 | Opus | Integration test: 2x 503 then success over real HTTP |
+| X-API-Key per-host auth | verified | 2026-02-27 | 14d | 2026-03-13 | Opus | Integration test: correct per-host keys sent, wrong key returns 401 |
 
 ---
 

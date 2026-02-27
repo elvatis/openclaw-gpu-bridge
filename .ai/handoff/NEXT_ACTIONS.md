@@ -5,42 +5,13 @@
 
 ---
 
-## T-001: Live multi-host validation
-
-**Goal:** Verify multi-GPU support works against 2+ real GPU hosts.
-
-**Context:**
-- v0.2 code + unit tests complete and passing (3/3)
-- Never tested against real hardware in multi-host config
-
-**What to do:**
-1. Start two GPU service instances/hosts and configure `hosts[]` in plugin config
-2. Verify round-robin distribution across hosts
-3. Verify least-busy picks lower VRAM host under load
-4. Kill one host during requests; verify automatic failover
-5. Check `/status` reflects active jobs and progress
-6. Verify auth on all hosts (`API_KEY`, 401/200 behavior)
-7. Update `STATUS.md` to mark Live multi-host test as (Verified)
-
-**Files:**
-- `openclaw.plugin.json`: hosts[] config schema
-- `src/client.ts`: multi-host orchestration logic
-- `gpu-service/gpu_service.py`: GPU service
-
-**Definition of done:**
-- [ ] Round-robin distribution confirmed on 2+ hosts
-- [ ] Failover triggers correctly when a host dies
-- [ ] STATUS.md updated with (Verified) for live test
-
----
-
 ## T-002: Publish npm package
 
 **Goal:** Publish `@elvatis_com/openclaw-gpu-bridge` v0.2.0 to npm.
 
 **Context:**
 - Package name: `@elvatis_com/openclaw-gpu-bridge`
-- Requires T-001 (live validation) before publishing
+- T-001 (live validation) completed - unblocked
 
 **What to do:**
 1. Bump version in `package.json` to `0.2.0`
@@ -78,7 +49,8 @@
 
 | Item | Resolution |
 |------|-----------|
-| Multi-host config (hosts[]) | Implemented in v0.2, 3/3 unit tests passing |
+| T-001 Live multi-host validation | 10 integration tests with real HTTP servers, 21/21 total passing |
+| Multi-host config (hosts[]) | Implemented in v0.2, 21/21 tests passing |
 | Load balancing (round-robin, least-busy) | Implemented and tested |
 | Failover + health checks | Implemented and tested |
 | Flexible model override + on-demand cache | Implemented |

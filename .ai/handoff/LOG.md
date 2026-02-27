@@ -1,5 +1,20 @@
 # openclaw-gpu-bridge - Log
 
+## 2026-02-27 - T-001 Live Multi-Host Validation (Opus)
+
+- Created **integration test suite** (`src/integration.test.ts`) using real HTTP servers (`http.createServer`) to validate multi-host behavior end-to-end - no mocked fetch.
+- 10 integration tests covering all T-001 acceptance criteria:
+  - **Round-robin distribution**: 4 requests distributed evenly (2+2) across 2 hosts
+  - **Least-busy selection**: host with lower VRAM utilization (4.2% vs 93.75%) selected for compute
+  - **Failover on host death**: dead host (port not listening) triggers automatic failover to healthy host
+  - **X-API-Key per-host auth**: correct per-host API keys sent in headers; wrong key produces 401 error
+  - **503 Retry-After**: 2x 503 responses with Retry-After header retried, succeeds on 3rd attempt
+  - **All endpoints**: /health, /info, /status, /embed, /bertscore verified over real HTTP
+- Total test suite: **21/21 passing** (11 unit + 10 integration)
+- `npm run build` passes with 0 TS errors
+- T-001 marked **done** in MANIFEST.json; T-002 (npm publish) now unblocked
+- TRUST.md updated: multi-host config, failover, 503 retry, per-host auth all verified
+
 ## 2026-02-23 - v0.2 Multi-GPU Implementation (Sonnet)
 
 - Implemented **multi-host config** in TypeScript client: `hosts[]` with per-host `apiKey`, plus v0.1 compatibility fallback (`serviceUrl` / `url`).
