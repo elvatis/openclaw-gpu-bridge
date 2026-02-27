@@ -1,4 +1,4 @@
-// GPU Bridge — Shared TypeScript types
+// GPU Bridge - Shared TypeScript types
 
 export type LoadBalancingStrategy = "round-robin" | "least-busy";
 

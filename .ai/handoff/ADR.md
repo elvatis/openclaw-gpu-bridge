@@ -1,4 +1,4 @@
-# ADR — openclaw-gpu-bridge Architecture Decisions
+# ADR - openclaw-gpu-bridge Architecture Decisions
 
 > Date: 2026-02-22 | Author: Opus (P2 Architect) | Status: Accepted
 
@@ -10,7 +10,7 @@
 
 **Details:**
 - `device.py` calls `torch.cuda.is_available()` at import time
-- If `True`: `torch.device("cuda")` — works for both vendors
+- If `True`: `torch.device("cuda")` - works for both vendors
 - If `False`: falls back to `torch.device("cpu")` with a warning log
 - `/info` endpoint exposes `torch.cuda.get_device_name(0)` and `torch.version.cuda` (or ROCm version) for diagnostics
 - Optional `TORCH_DEVICE` env var overrides auto-detection (e.g., force CPU for testing)
@@ -95,7 +95,7 @@ pip install -r requirements.txt
 uvicorn gpu_service:app --host 0.0.0.0 --port 8765
 ```
 
-**Future:** A `Dockerfile` (NVIDIA/CUDA) is included for containerized deployment. AMD/ROCm support is architecturally possible (see D1 — `torch.cuda.is_available()` works for both) but not needed now; noted in README as future option.
+**Future:** A `Dockerfile` (NVIDIA/CUDA) is included for containerized deployment. AMD/ROCm support is architecturally possible (see D1 - `torch.cuda.is_available()` works for both) but not needed now; noted in README as future option.
 
 **Rationale:** Docker adds complexity for a single-machine Windows setup. A Python venv is simpler to debug and iterate on during development.
 
@@ -113,12 +113,12 @@ uvicorn gpu_service:app --host 0.0.0.0 --port 8765
 | `gpu_embed` | Generate text embeddings | `texts`, `model?` |
 
 **File structure:**
-- `src/index.ts` — Plugin entry, reads config, registers 4 tools
-- `src/tools.ts` — Tool execute functions (call client methods)
-- `src/client.ts` — `GpuBridgeClient` class (fetch wrapper with baseUrl, apiKey, timeout)
-- `src/types.ts` — TypeScript interfaces for requests/responses
+- `src/index.ts` - Plugin entry, reads config, registers 4 tools
+- `src/tools.ts` - Tool execute functions (call client methods)
+- `src/client.ts` - `GpuBridgeClient` class (fetch wrapper with baseUrl, apiKey, timeout)
+- `src/types.ts` - TypeScript interfaces for requests/responses
 
-**Dependencies:** Node 18+ native `fetch` — no external HTTP library needed.
+**Dependencies:** Node 18+ native `fetch` - no external HTTP library needed.
 
 ---
 
@@ -155,25 +155,25 @@ uvicorn gpu_service:app --host 0.0.0.0 --port 8765
 
 ```
 openclaw-gpu-bridge/
-├── .ai/handoff/           — AAHP handoff docs
+├── .ai/handoff/           - AAHP handoff docs
 │   ├── STATUS.md
-│   ├── ADR.md             — This file
+│   ├── ADR.md             - This file
 │   ├── LOG.md
 │   ├── NEXT_ACTIONS.md
 │   └── DASHBOARD.md
 ├── src/
-│   ├── index.ts           — Plugin entry, registerTool x4
-│   ├── tools.ts           — Tool execute implementations
-│   ├── client.ts          — GpuBridgeClient (fetch wrapper)
-│   └── types.ts           — Shared TS interfaces
+│   ├── index.ts           - Plugin entry, registerTool x4
+│   ├── tools.ts           - Tool execute implementations
+│   ├── client.ts          - GpuBridgeClient (fetch wrapper)
+│   └── types.ts           - Shared TS interfaces
 ├── gpu-service/
-│   ├── gpu_service.py     — FastAPI app (endpoints + lifespan)
-│   ├── models.py          — Pydantic request/response models
-│   ├── device.py          — GPU detection + device selection
-│   ├── requirements.txt   — Python deps (torch, fastapi, etc.)
-│   ├── README.md          — Setup guide (Windows + Docker)
-│   └── Dockerfile         — NVIDIA/CUDA image (optional)
-├── openclaw.plugin.json   — Plugin manifest
+│   ├── gpu_service.py     - FastAPI app (endpoints + lifespan)
+│   ├── models.py          - Pydantic request/response models
+│   ├── device.py          - GPU detection + device selection
+│   ├── requirements.txt   - Python deps (torch, fastapi, etc.)
+│   ├── README.md          - Setup guide (Windows + Docker)
+│   └── Dockerfile         - NVIDIA/CUDA image (optional)
+├── openclaw.plugin.json   - Plugin manifest
 ├── package.json
 ├── tsconfig.json
 └── README.md

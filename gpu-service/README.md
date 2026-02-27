@@ -1,4 +1,4 @@
-# GPU Service — FastAPI Backend
+# GPU Service - FastAPI Backend
 
 Runs on the GPU machine (Windows or Linux) and exposes ML inference via REST.
 
@@ -106,7 +106,7 @@ docker run --gpus all -p 8765:8765 gpu-service
 The architecture supports AMD GPUs via PyTorch's ROCm build. `torch.cuda.is_available()` returns `True` for both CUDA and ROCm. To run on AMD:
 
 1. Install PyTorch ROCm build: `pip install torch --index-url https://download.pytorch.org/whl/rocm6.0`
-2. Everything else is identical — no code changes needed.
+2. Everything else is identical - no code changes needed.
 
 A `Dockerfile.rocm` will be added when AMD hardware is available for testing.
 

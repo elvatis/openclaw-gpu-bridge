@@ -1,4 +1,4 @@
-// GPU Bridge — HTTP Client with multi-host load balancing/failover
+// GPU Bridge - HTTP Client with multi-host load balancing/failover
 
 import type {
   GpuBridgeConfig,

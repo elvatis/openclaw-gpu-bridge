@@ -1,4 +1,4 @@
-# REVIEW.md — openclaw-gpu-bridge P4 Discussion Round
+# REVIEW.md - openclaw-gpu-bridge P4 Discussion Round
 
 > Reviewer: Sonnet (P4 Review)  
 > Date: 2026-02-22  
@@ -42,8 +42,8 @@ try {
 }
 ```
 
-This is **functionally equivalent** to `AbortSignal.timeout()` and slightly preferable here because the `clearTimeout` in `finally` prevents timer leaks after a successful response — something `AbortSignal.timeout()` doesn't need to do (it cleans up automatically), but the manual approach is also correct.  
-Health checks use a hardcoded 5 s timeout; all other requests use the configurable `timeout` (default 45 s). Per ADR D7: client (45 s) < server (65 s) — correct ordering. ✅
+This is **functionally equivalent** to `AbortSignal.timeout()` and slightly preferable here because the `clearTimeout` in `finally` prevents timer leaks after a successful response - something `AbortSignal.timeout()` doesn't need to do (it cleans up automatically), but the manual approach is also correct.  
+Health checks use a hardcoded 5 s timeout; all other requests use the configurable `timeout` (default 45 s). Per ADR D7: client (45 s) < server (65 s) - correct ordering. ✅
 
 ### 3. X-API-Key Header ✅
 
@@ -88,7 +88,7 @@ Models are loaded once at startup, stored in `app.state`. Endpoints access pre-l
 try:
     await asyncio.wait_for(semaphore.acquire(), timeout=1.0)
 except asyncio.TimeoutError:
-    raise HTTPException(503, "GPU busy — retry later", headers={"Retry-After": "5"})
+    raise HTTPException(503, "GPU busy - retry later", headers={"Retry-After": "5"})
 
 try:
     ...  # inference (now non-blocking via asyncio.to_thread)
@@ -97,8 +97,8 @@ finally:
 ```
 
 **Correctness analysis:**  
-- If semaphore value > 0: `acquire()` returns immediately (no internal `await`), so `wait_for` cancellation cannot interrupt it mid-acquisition — no leak possible.  
-- If semaphore value == 0: `acquire()` awaits an internal future. On timeout, `wait_for` cancels that future; Python's `asyncio.Semaphore` removes itself from waiters on `CancelledError` and re-raises. `asyncio.wait_for` re-maps this to `asyncio.TimeoutError` (Python 3.11+), which is caught and becomes an HTTP 503. Semaphore is not acquired, no release needed — correct.  
+- If semaphore value > 0: `acquire()` returns immediately (no internal `await`), so `wait_for` cancellation cannot interrupt it mid-acquisition - no leak possible.  
+- If semaphore value == 0: `acquire()` awaits an internal future. On timeout, `wait_for` cancels that future; Python's `asyncio.Semaphore` removes itself from waiters on `CancelledError` and re-raises. `asyncio.wait_for` re-maps this to `asyncio.TimeoutError` (Python 3.11+), which is caught and becomes an HTTP 503. Semaphore is not acquired, no release needed - correct.  
 - `finally: semaphore.release()` executes even on inference exceptions. With `asyncio.to_thread` (see Critical Fix), the thread is awaitable, so task cancellation also triggers `finally`. ✅  
 - `GPU_MAX_CONCURRENT` env var allows tuning. ✅
 
@@ -111,8 +111,8 @@ class InfoResponse(BaseModel):
     cuda_version: str | None = None
 ```
 
-- Uses `list[str]` and `int | None` (Python 3.10+ union syntax) — correct for Pydantic v2
-- `Field(default_factory=list)` — correct v2 syntax
+- Uses `list[str]` and `int | None` (Python 3.10+ union syntax) - correct for Pydantic v2
+- `Field(default_factory=list)` - correct v2 syntax
 - No deprecated `List[str]` / `Optional[X]` patterns
 - No `validator`; all defaults are simple values or `default_factory` ✅
 
@@ -149,8 +149,8 @@ async def auth_middleware(request: Request, call_next):
 
 ### 2. Injection Risks ✅
 
-- Text inputs (`candidates`, `references`, `texts`) are passed directly to NLP library methods — no shell execution, no subprocess calls, no eval/exec on user input
-- Model names (`bertscore_model_name`, `embed_model_name`) come from `app.state` (set at startup from env vars), **not** from request parameters — no path traversal or arbitrary model loading from user input
+- Text inputs (`candidates`, `references`, `texts`) are passed directly to NLP library methods - no shell execution, no subprocess calls, no eval/exec on user input
+- Model names (`bertscore_model_name`, `embed_model_name`) come from `app.state` (set at startup from env vars), **not** from request parameters - no path traversal or arbitrary model loading from user input
 - No SQL, no filesystem writes from user data
 - No SSRF risk (service is purely compute; it initiates no outbound connections from user input)
 
@@ -167,7 +167,7 @@ async def auth_middleware(request: Request, call_next):
 **Problem:**  
 `scorer.score()` and `embedder.encode()` are **synchronous, CPU/GPU-bound** operations. When called directly in an `async def` FastAPI handler, they block the asyncio event loop for the entire duration of the inference (typically 1–15 seconds per batch on GPU). During this time:
 
-- The server **cannot process any other requests** — including `/health` liveness checks
+- The server **cannot process any other requests** - including `/health` liveness checks
 - Uvicorn cannot handle new connections
 - The semaphore's `wait_for` timeout in concurrent requests cannot fire (event loop is frozen)
 
@@ -191,7 +191,7 @@ vecs = embedder.encode(req.texts, convert_to_numpy=True)
 vecs = await asyncio.to_thread(embedder.encode, req.texts, convert_to_numpy=True)
 ```
 
-**Fix applied directly** — see commit `fix(review): P4 fixes [AAHP-P4]`.
+**Fix applied directly** - see commit `fix(review): P4 fixes [AAHP-P4]`.
 
 ---
 
