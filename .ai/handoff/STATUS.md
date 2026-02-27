@@ -1,7 +1,6 @@
 # openclaw-gpu-bridge: Current State of the Nation
 
-> Last updated: 2026-02-26 by claude-sonnet-4.6 (AAHP v3 migration)
-> Commit: 440ea4c
+> Last updated: 2026-02-27 by claude-opus-4.6 (v0.2 roadmap definition)
 >
 > **Rule:** This file is rewritten (not appended) at the end of every session.
 > It reflects the *current* reality, not history. History lives in LOG.md.
@@ -9,7 +8,7 @@
 ---
 
 <!-- SECTION: summary -->
-v0.2 multi-GPU code + tests complete. Awaiting live validation against real GPU hardware. npm publish pending.
+v0.2 multi-GPU code + tests complete. v0.2 roadmap defined with 5 GitHub issues covering input validation, Python tests, 503 retry logic, Dockerfile update, and docs fixes. Awaiting live validation against real GPU hardware. npm publish pending.
 <!-- /SECTION: summary -->
 
 <!-- SECTION: build_health -->
@@ -59,11 +58,15 @@ v0.2 multi-GPU code + tests complete. Awaiting live validation against real GPU 
 <!-- SECTION: what_is_missing -->
 ## What is Missing
 
-| Gap | Severity | Description |
-|-----|----------|-------------|
-| Live multi-host validation | HIGH | Must test against 2+ real GPU hosts |
-| npm publish | HIGH | Not yet published to npm registry |
-| Python unit tests | MEDIUM | No tests for model-cache and /status |
+| Gap | Severity | GitHub Issue | Description |
+|-----|----------|-------------|-------------|
+| Live multi-host validation | HIGH | - | Must test against 2+ real GPU hosts |
+| npm publish | HIGH | - | Not yet published to npm registry |
+| Input size validation | HIGH | [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | No max length on input arrays - GPU OOM risk |
+| 503 Retry-After handling | HIGH | [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | Client marks busy hosts as unhealthy instead of retrying |
+| Python unit tests | MEDIUM | [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | No tests for model-cache and /status |
+| Outdated Dockerfile | MEDIUM | [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | Base image PyTorch 2.2.0 vs required 2.5.0+ |
+| Stale gpu-service README | LOW | [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | Wrong defaults, missing /status endpoint |
 
 <!-- /SECTION: what_is_missing -->
 

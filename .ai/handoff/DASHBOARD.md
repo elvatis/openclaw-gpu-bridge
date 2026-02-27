@@ -14,8 +14,9 @@
 | P3 Implementation | Done | Sonnet | 2026-02-22 |
 | P4 Discussion Review | Done | Sonnet (Reviewer) | 2026-02-22 |
 | P5 v0.2 Multi-GPU | Done | Sonnet | 2026-02-23 |
-| P6 Live Validation | Planned | - | - |
-| P7 Publish | Planned | - | - |
+| P6 v0.2 Roadmap Definition | Done | Opus | 2026-02-27 |
+| P7 Live Validation | Planned | - | - |
+| P8 Publish | Planned | - | - |
 
 ---
 
@@ -49,10 +50,26 @@
 
 ---
 
+## v0.2 Roadmap - GitHub Issues
+
+| Issue | Title | Labels | Priority |
+|-------|-------|--------|----------|
+| [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | Add input size validation to prevent GPU OOM on large batches | enhancement | HIGH |
+| [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | Add Python unit tests for gpu-service (pytest) | enhancement | MEDIUM |
+| [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | TS client should honor Retry-After header on 503 responses | bug | HIGH |
+| [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | Dockerfile uses outdated PyTorch base image (2.2.0 vs required 2.5.0+) | bug | MEDIUM |
+| [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | gpu-service README has stale defaults and missing /status endpoint | documentation | LOW |
+
+---
+
 ## Open Tasks (strategic priority)
 
 | ID | Task | Priority | Blocked by | Ready? |
 |----|------|----------|-----------|--------|
 | T-001 | Live multi-host validation | HIGH | - | Ready |
 | T-002 | Publish npm package v0.2.0 | HIGH | T-001 | Blocked |
-| T-003 | Python unit tests (optional) | MEDIUM | - | Ready |
+| T-003 | Python unit tests (optional) - see [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | MEDIUM | - | Ready |
+| T-004 | Input size validation - see [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | HIGH | - | Ready |
+| T-005 | 503 Retry-After handling - see [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | HIGH | - | Ready |
+| T-006 | Update Dockerfile base image - see [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | MEDIUM | - | Ready |
+| T-007 | Fix stale gpu-service README - see [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | LOW | - | Ready |
