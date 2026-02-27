@@ -5,10 +5,14 @@ src/
 *.test.js.map
 jest.config.cjs
 
-# Python bytecode
+# Python bytecode and tests
 __pycache__/
 *.pyc
 *.pyo
+gpu-service/tests/
+gpu-service/pytest.ini
+gpu-service/.pytest_cache/
+gpu-service/requirements-dev.txt
 
 # Dev/CI
 .ai/

@@ -9,6 +9,11 @@
     "!dist/**/*.test.*",
     "gpu-service/",
     "!gpu-service/__pycache__/",
+    "!gpu-service/**/__pycache__/",
+    "!gpu-service/tests/",
+    "!gpu-service/pytest.ini",
+    "!gpu-service/.pytest_cache/",
+    "!gpu-service/requirements-dev.txt",
     "openclaw.plugin.json",
     "README.md"
   ],
