@@ -86,6 +86,22 @@
       "depends_on": [],
       "created": "2026-02-26T23:16:45Z",
       "completed": "2026-02-27T04:00:35.642Z"
+    },
+    "T-004": {
+      "title": "Fix Dockerfile: update PyTorch base image to 2.5.x",
+      "status": "ready",
+      "priority": "high",
+      "depends_on": [],
+      "created": "2026-02-27T08:40:56Z",
+      "github_issue": "https://github.com/homeofe/openclaw-gpu-bridge/issues/4"
+    },
+    "T-005": {
+      "title": "Fix stale README: wrong default model and missing endpoints",
+      "status": "ready",
+      "priority": "medium",
+      "depends_on": [],
+      "created": "2026-02-27T08:40:56Z",
+      "github_issue": "https://github.com/homeofe/openclaw-gpu-bridge/issues/5"
     }
   }
 }
