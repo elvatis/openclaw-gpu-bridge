@@ -16,6 +16,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "jest",
+    "test:python": "cd gpu-service && python -m pytest tests/ -v",
+    "test:all": "npm test && npm run test:python",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

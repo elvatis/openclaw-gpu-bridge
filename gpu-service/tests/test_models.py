@@ -1,13 +1,7 @@
 """Unit tests for Pydantic request/response models."""
 
-import os
-import sys
-
 import pytest
 from pydantic import ValidationError
-
-# Add gpu-service directory to path so we can import models directly
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from models import (
     BertScoreRequest,

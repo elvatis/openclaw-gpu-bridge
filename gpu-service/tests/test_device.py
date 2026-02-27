@@ -1,12 +1,9 @@
 """Unit tests for device detection and info."""
 
 import os
-import sys
 from unittest.mock import MagicMock, patch
 
 import torch
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from device import get_device, get_device_info
 

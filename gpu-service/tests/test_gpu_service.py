@@ -6,7 +6,6 @@ mocked ML models and no lifespan (since httpx ASGITransport does not
 trigger ASGI lifespan events).
 """
 
-import os
 import sys
 from unittest.mock import MagicMock, patch
 
@@ -14,8 +13,6 @@ import numpy as np
 import pytest
 import torch
 from httpx import ASGITransport, AsyncClient
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from models import (
     BertScoreRequest,
@@ -452,6 +449,132 @@ class TestAuthMiddleware:
 # --- Helper function tests ---
 
 
+class TestBertScoreMultiplePairs:
+    @pytest.mark.asyncio
+    async def test_bertscore_multiple_pairs(self, client):
+        """BERTScore endpoint handles multiple candidate/reference pairs."""
+        # Re-build app with a scorer that returns 3 scores
+        app = _make_test_app()
+        scorer = app.state.bertscore_cache["microsoft/deberta-xlarge-mnli"]
+        scorer.score.return_value = (
+            torch.tensor([0.9, 0.85, 0.8]),
+            torch.tensor([0.88, 0.82, 0.78]),
+            torch.tensor([0.89, 0.83, 0.79]),
+        )
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            resp = await c.post(
+                "/bertscore",
+                json={
+                    "candidates": ["a", "b", "c"],
+                    "references": ["x", "y", "z"],
+                },
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert len(data["precision"]) == 3
+        assert len(data["recall"]) == 3
+        assert len(data["f1"]) == 3
+
+
+class TestEmbedBatching:
+    @pytest.mark.asyncio
+    async def test_embed_multiple_texts(self, client):
+        """Embed endpoint handles multiple texts in a single request."""
+        app = _make_test_app()
+        embedder = app.state.embed_cache["all-MiniLM-L6-v2"]
+        embedder.encode.return_value = np.array([
+            [0.1, 0.2, 0.3],
+            [0.4, 0.5, 0.6],
+            [0.7, 0.8, 0.9],
+        ])
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            resp = await c.post(
+                "/embed",
+                json={"texts": ["hello", "world", "test"]},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert len(data["embeddings"]) == 3
+        assert data["dimensions"] == 3
+
+
+class TestOnDemandModelLoading:
+    @pytest.mark.asyncio
+    async def test_bertscore_loads_uncached_model(self):
+        """BERTScore endpoint loads a non-cached model on demand."""
+        app = _make_test_app()
+        # The factory should produce a new scorer for uncached models
+        new_scorer = _create_mock_scorer()
+        app.state.BERTScorer = MagicMock(return_value=new_scorer)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            resp = await c.post(
+                "/bertscore",
+                json={
+                    "candidates": ["hello"],
+                    "references": ["hi"],
+                    "model_type": "new-uncached-model",
+                },
+            )
+        assert resp.status_code == 200
+        assert resp.json()["model"] == "new-uncached-model"
+        # Model should now be cached
+        assert "new-uncached-model" in app.state.bertscore_cache
+
+    @pytest.mark.asyncio
+    async def test_embed_loads_uncached_model(self):
+        """Embed endpoint loads a non-cached model on demand."""
+        app = _make_test_app()
+        new_embedder = _create_mock_embedder()
+        app.state.SentenceTransformer = MagicMock(return_value=new_embedder)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            resp = await c.post(
+                "/embed",
+                json={"texts": ["hello"], "model": "new-uncached-model"},
+            )
+        assert resp.status_code == 200
+        assert resp.json()["model"] == "new-uncached-model"
+        assert "new-uncached-model" in app.state.embed_cache
+
+
+class TestJobTracking:
+    @pytest.mark.asyncio
+    async def test_jobs_cleaned_up_after_bertscore(self):
+        """Active jobs dict is empty after bertscore completes."""
+        app = _make_test_app()
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            await c.post(
+                "/bertscore",
+                json={"candidates": ["hi"], "references": ["hello"]},
+            )
+        assert len(app.state.active_jobs) == 0
+
+    @pytest.mark.asyncio
+    async def test_jobs_cleaned_up_after_embed(self):
+        """Active jobs dict is empty after embed completes."""
+        app = _make_test_app()
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            await c.post(
+                "/embed",
+                json={"texts": ["hello"]},
+            )
+        assert len(app.state.active_jobs) == 0
+
+    @pytest.mark.asyncio
+    async def test_status_shows_no_active_jobs_when_idle(self, client):
+        """Status endpoint shows zero in-flight jobs when idle."""
+        resp = await client.get("/status")
+        data = resp.json()
+        assert data["queue"]["in_flight"] == 0
+        assert data["queue"]["available_slots"] == 2
+        assert data["active_jobs"] == []
+
+
 class TestHelpers:
     def test_vram_mb_cpu(self):
         """_vram_mb returns 'CPU' when no CUDA available."""
@@ -465,6 +588,27 @@ class TestHelpers:
             with patch.object(gpu_service.torch.cuda, "is_available", return_value=False):
                 result = gpu_service._vram_mb()
                 assert result == "CPU"
+
+    def test_vram_mb_cuda(self):
+        """_vram_mb returns VRAM string when CUDA available."""
+        with patch.dict("sys.modules", {
+            "bert_score": MagicMock(),
+            "sentence_transformers": MagicMock(),
+        }):
+            if "gpu_service" in sys.modules:
+                del sys.modules["gpu_service"]
+            import gpu_service
+
+            mock_props = MagicMock()
+            mock_props.total_memory = 12 * 1024 * 1024 * 1024  # 12 GB
+
+            with patch.object(gpu_service.torch.cuda, "is_available", return_value=True), \
+                 patch.object(gpu_service.torch.cuda, "memory_allocated", return_value=512 * 1024 * 1024), \
+                 patch.object(gpu_service.torch.cuda, "get_device_properties", return_value=mock_props):
+                result = gpu_service._vram_mb()
+                assert "512 MB" in result
+                assert "12288 MB" in result
+                assert "VRAM" in result
 
     def test_to_iso_epoch(self):
         """_to_iso converts epoch 0 to 1970-01-01."""
@@ -490,3 +634,21 @@ class TestHelpers:
             result = gpu_service._to_iso(1709000000)
             assert "T" in result
             assert "+00:00" in result
+
+    def test_loaded_models_lists_both_caches(self):
+        """_loaded_models returns both bertscore and embed cache keys."""
+        app = _make_test_app()
+        transport = ASGITransport(app=app)
+
+        # Access loaded_models via /info endpoint
+        import asyncio
+        async def _check():
+            async with AsyncClient(transport=transport, base_url="http://test") as c:
+                resp = await c.get("/info")
+                data = resp.json()
+                models = data["loaded_models"]
+                assert any("bertscore:" in m for m in models)
+                assert any("embed:" in m for m in models)
+                assert len(models) == 2
+
+        asyncio.get_event_loop().run_until_complete(_check())
