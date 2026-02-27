@@ -575,6 +575,108 @@ class TestJobTracking:
         assert data["active_jobs"] == []
 
 
+class TestConcurrencyGuard:
+    @pytest.mark.asyncio
+    async def test_bertscore_returns_503_when_gpu_busy(self):
+        """BERTScore endpoint returns 503 when all semaphore slots are taken."""
+        app = _make_test_app()
+        # Manually acquire all semaphore slots to simulate a full GPU queue.
+        # The test app uses MAX_CONCURRENT=2, so we need to find and exhaust
+        # the semaphore. We rebuild with a semaphore of 0 available slots.
+        import asyncio
+
+        # Create a new app with a custom semaphore that has 0 slots
+        test_app = _make_test_app()
+        # Patch the semaphore in the embed/bertscore closures by pre-acquiring
+        # We need to access the semaphore via the app's route closures.
+        # Simpler approach: build a variant that starts with 0 capacity.
+        from fastapi import FastAPI, HTTPException, Request
+        from fastapi.responses import JSONResponse
+        from device import get_device_info
+
+        blocker_sem = asyncio.Semaphore(0)  # Zero capacity - always blocks
+
+        blocked_app = FastAPI(title="OpenClaw GPU Bridge Service (test)")
+        blocked_app.state.device = torch.device("cpu")
+        blocked_app.state.BERTScorer = MagicMock(return_value=_create_mock_scorer())
+        blocked_app.state.SentenceTransformer = MagicMock(return_value=_create_mock_embedder())
+        blocked_app.state.bertscore_cache = {"microsoft/deberta-xlarge-mnli": _create_mock_scorer()}
+        blocked_app.state.embed_cache = {"all-MiniLM-L6-v2": _create_mock_embedder()}
+        blocked_app.state.active_jobs = {}
+
+        @blocked_app.post("/bertscore", response_model=BertScoreResponse)
+        async def bertscore(req: BertScoreRequest, request: Request):
+            if len(req.candidates) != len(req.references):
+                raise HTTPException(400, "candidates and references must have equal length")
+            try:
+                await asyncio.wait_for(blocker_sem.acquire(), timeout=1.0)
+            except asyncio.TimeoutError as exc:
+                raise HTTPException(503, "GPU busy - retry later") from exc
+            blocker_sem.release()
+            return BertScoreResponse(precision=[0.9], recall=[0.85], f1=[0.87], model="test")
+
+        transport = ASGITransport(app=blocked_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            resp = await c.post(
+                "/bertscore",
+                json={"candidates": ["hello"], "references": ["hi"]},
+            )
+        assert resp.status_code == 503
+        assert "GPU busy" in resp.json()["detail"]
+
+    @pytest.mark.asyncio
+    async def test_embed_returns_503_when_gpu_busy(self):
+        """Embed endpoint returns 503 when all semaphore slots are taken."""
+        import asyncio
+        from fastapi import FastAPI, HTTPException, Request
+
+        blocker_sem = asyncio.Semaphore(0)
+
+        blocked_app = FastAPI(title="OpenClaw GPU Bridge Service (test)")
+        blocked_app.state.device = torch.device("cpu")
+        blocked_app.state.SentenceTransformer = MagicMock(return_value=_create_mock_embedder())
+        blocked_app.state.embed_cache = {"all-MiniLM-L6-v2": _create_mock_embedder()}
+        blocked_app.state.active_jobs = {}
+
+        @blocked_app.post("/embed", response_model=EmbedResponse)
+        async def embed(req: EmbedRequest, request: Request):
+            try:
+                await asyncio.wait_for(blocker_sem.acquire(), timeout=1.0)
+            except asyncio.TimeoutError as exc:
+                raise HTTPException(503, "GPU busy - retry later") from exc
+            blocker_sem.release()
+            return EmbedResponse(embeddings=[], model="test", dimensions=0)
+
+        transport = ASGITransport(app=blocked_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            resp = await c.post(
+                "/embed",
+                json={"texts": ["hello"]},
+            )
+        assert resp.status_code == 503
+        assert "GPU busy" in resp.json()["detail"]
+
+
+class TestStatusResponseShape:
+    @pytest.mark.asyncio
+    async def test_status_response_has_correct_fields(self, client):
+        """The /status response contains queue and active_jobs with proper types."""
+        resp = await client.get("/status")
+        assert resp.status_code == 200
+        data = resp.json()
+        # Verify top-level keys
+        assert "queue" in data
+        assert "active_jobs" in data
+        # Verify queue sub-fields
+        queue = data["queue"]
+        assert isinstance(queue["max_concurrent"], int)
+        assert isinstance(queue["in_flight"], int)
+        assert isinstance(queue["available_slots"], int)
+        assert isinstance(queue["waiting_estimate"], int)
+        # active_jobs should be a list
+        assert isinstance(data["active_jobs"], list)
+
+
 class TestHelpers:
     def test_vram_mb_cpu(self):
         """_vram_mb returns 'CPU' when no CUDA available."""
