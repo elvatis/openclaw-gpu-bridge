@@ -9,7 +9,7 @@ Runs on the GPU machine (Windows or Linux) and exposes ML inference via REST.
 - **RAM:** 16GB+ system RAM
 - **Python:** 3.10+
 
-## Windows Setup (Recommended for v0.1)
+## Windows Setup
 
 ### 1. Install Python 3.10+
 
@@ -51,7 +51,7 @@ python gpu_service.py
 
 The service will:
 1. Auto-detect your GPU via `torch.cuda.is_available()`
-2. Pre-load BERTScore (`roberta-large`) and embedding (`all-MiniLM-L6-v2`) models
+2. Pre-load BERTScore (`microsoft/deberta-xlarge-mnli`) and embedding (`all-MiniLM-L6-v2`) models
 3. Listen on `http://0.0.0.0:8765`
 
 First startup takes 1-2 minutes (model downloads). Subsequent starts are ~15s.
@@ -95,10 +95,13 @@ docker run --gpus all -p 8765:8765 gpu-service
 
 | Variable | Default | Description |
 |---|---|---|
-| `TORCH_DEVICE` | auto-detect | Force device (`cuda`, `cpu`) |
-| `MODEL_BERTSCORE` | `roberta-large` | BERTScore model |
+| `TORCH_DEVICE` | auto-detect | Force device (`cuda`, `cpu`, `cuda:1`) |
+| `MODEL_BERTSCORE` | `microsoft/deberta-xlarge-mnli` | BERTScore model |
 | `MODEL_EMBED` | `all-MiniLM-L6-v2` | Embedding model |
 | `GPU_MAX_CONCURRENT` | `2` | Max concurrent GPU requests |
+| `GPU_EMBED_BATCH` | `32` | Embedding chunk size for progress logging |
+| `GPU_MAX_BATCH_SIZE` | `100` | Max items per batch (candidates, references, texts) |
+| `GPU_MAX_TEXT_LENGTH` | `10000` | Max character length per individual text |
 | `API_KEY` | (none) | If set, requires `X-API-Key` header |
 
 ## AMD ROCm (Future)
@@ -116,5 +119,6 @@ A `Dockerfile.rocm` will be added when AMD hardware is available for testing.
 |---|---|---|
 | `/health` | GET | Liveness check |
 | `/info` | GET | GPU info + loaded models |
+| `/status` | GET | Queue, active jobs, and progress |
 | `/bertscore` | POST | BERTScore computation |
 | `/embed` | POST | Text embeddings |
