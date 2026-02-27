@@ -102,6 +102,8 @@ Additional models are loaded on-demand and cached in memory.
 - `API_KEY`: require `X-API-Key` for all endpoints except `/health`
 - `GPU_MAX_CONCURRENT`: max parallel jobs (default `2`)
 - `GPU_EMBED_BATCH`: embedding chunk size for progress logging (default `32`)
+- `GPU_MAX_BATCH_SIZE`: max items per batch (default `100`)
+- `GPU_MAX_TEXT_LENGTH`: max character length per text (default `10000`)
 - `MODEL_BERTSCORE`: default warm model for BERTScore
 - `MODEL_EMBED`: default warm model for embeddings
 - `TORCH_DEVICE`: force device (`cuda`, `cpu`, `cuda:1`)
