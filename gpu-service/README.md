@@ -104,6 +104,36 @@ docker run --gpus all -p 8765:8765 gpu-service
 | `GPU_MAX_TEXT_LENGTH` | `10000` | Max character length per individual text |
 | `API_KEY` | (none) | If set, requires `X-API-Key` header |
 
+## Testing
+
+Tests use pytest with mocked ML models - no GPU required.
+
+### Install test dependencies
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+### Run tests
+
+```bash
+# From the gpu-service directory
+pytest tests/ -v
+
+# Or from the project root
+pytest gpu-service/tests/
+```
+
+The test suite covers:
+- Endpoint response shapes (`/health`, `/info`, `/status`, `/bertscore`, `/embed`)
+- Model cache hit/miss and on-demand loading
+- Auth middleware (API key enforcement, `/health` bypass)
+- Concurrency guard (503 when GPU is busy)
+- BERTScore and embed request validation (batch size limits, text length limits)
+- Job tracking and cleanup
+- Device detection (CUDA, ROCm, CPU fallback)
+- Pydantic model validation for all request/response types
+
 ## AMD ROCm (Future)
 
 The architecture supports AMD GPUs via PyTorch's ROCm build. `torch.cuda.is_available()` returns `True` for both CUDA and ROCm. To run on AMD:
