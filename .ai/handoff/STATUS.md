@@ -1,51 +1,76 @@
-# openclaw-gpu-bridge — Status
+# openclaw-gpu-bridge: Current State of the Nation
 
-> Last updated: 2026-02-23
-> Phase: v0.2 implemented (code + unit tests complete), awaiting multi-host live validation
+> Last updated: 2026-02-26 by claude-sonnet-4.6 (AAHP v3 migration)
+> Commit: 440ea4c
+>
+> **Rule:** This file is rewritten (not appended) at the end of every session.
+> It reflects the *current* reality, not history. History lives in LOG.md.
 
+---
+
+<!-- SECTION: summary -->
+v0.2 multi-GPU code + tests complete. Awaiting live validation against real GPU hardware. npm publish pending.
+<!-- /SECTION: summary -->
+
+<!-- SECTION: build_health -->
+## Build Health
+
+| Check | Result | Notes |
+|-------|--------|-------|
+| `npm run build` (TypeScript) | (Verified) | `npm run build` passes with 0 TS errors |
+| `npm test` (Jest) | (Verified) | 3/3 unit tests passing (multi-host logic) |
+| `lint` | (Unknown) | Not configured |
+| `type-check` | (Verified) | Included in build |
+
+<!-- /SECTION: build_health -->
+
+---
+
+<!-- SECTION: project_overview -->
 ## Project Overview
 
 **Package:** `@elvatis_com/openclaw-gpu-bridge`
 **Repo:** https://github.com/homeofe/openclaw-gpu-bridge
 **Purpose:** Expose remote GPU compute (BERTScore, embeddings) as OpenClaw tools, now with multi-host orchestration.
 
-## Build Health
+<!-- /SECTION: project_overview -->
+
+---
+
+<!-- SECTION: component_status -->
+## Component Status
 
 | Component | Status | Notes |
-|---|---|---|
-| TypeScript strict build | (Verified) | `npm run build` passes with 0 TS errors |
-| Unit tests | (Verified) | `npm test` 3/3 passed (multi-host logic) |
+|-----------|--------|-------|
 | `src/client.ts` | (Verified) | Multi-host pool, round-robin/least-busy, failover, health-check loop |
-| `src/tools.ts` | (Verified) | Backward compatible tools + optional `gpu_status` |
-| `src/index.ts` | (Verified) | Registers 5 tools (`gpu_status` added) |
-| `openclaw.plugin.json` | (Verified) | v0.2 config schema (`hosts[]`, LB strategy, compatibility fields) |
-| `gpu-service/gpu_service.py` | (Verified) | On-demand model loading + cache, `/status`, progress logging |
-| `gpu-service/models.py` | (Verified) | Added status response models, updated defaults |
-| README | (Verified) | Added internet exposure hardening + v0.2 usage |
+| `src/tools.ts` | (Verified) | 5 tools including gpu_status |
+| `src/index.ts` | (Verified) | Registers 5 tools |
+| `openclaw.plugin.json` | (Verified) | v0.2 config schema with hosts[] |
+| `gpu-service/gpu_service.py` | (Verified) | On-demand model loading + cache, /status |
+| `gpu-service/models.py` | (Verified) | Status response models, updated defaults |
+| README | (Verified) | Internet exposure hardening + v0.2 usage |
 | Live multi-host test | (Unknown) | Not yet run against 2+ real GPU hosts |
 | npm publish | (Unknown) | Not yet published |
 
-## v0.2 Feature Status
+<!-- /SECTION: component_status -->
 
-1. **Multi-GPU Support** — (Verified in code/tests)
-   - `hosts: [{url, name, apiKey}]` config
-   - v0.1 compatibility (`serviceUrl` / `url`)
-   - Load balancing: `round-robin` + `least-busy`
-   - Failover to next host on host failure
-   - Periodic health checks with unhealthy host rotation
+---
 
-2. **Internet-Erreichbarkeit Doku** — (Verified)
-   - README section: **Exposing to the Internet**
-   - X-API-Key pre-shared key documented
-   - TLS via nginx reverse proxy + uvicorn SSL example
-   - WireGuard private-network alternative documented
+<!-- SECTION: what_is_missing -->
+## What is Missing
 
-3. **Flexible model selection** — (Verified)
-   - `/embed` supports per-request `model`
-   - `/bertscore` supports per-request `model_type`
-   - Models load on demand and are cached server-side
-   - Defaults: embed `all-MiniLM-L6-v2`, bertscore `microsoft/deberta-xlarge-mnli`
+| Gap | Severity | Description |
+|-----|----------|-------------|
+| Live multi-host validation | HIGH | Must test against 2+ real GPU hosts |
+| npm publish | HIGH | Not yet published to npm registry |
+| Python unit tests | MEDIUM | No tests for model-cache and /status |
 
-4. **Transfer progress / visibility** — (Verified, optional scope)
-   - Added `/status` endpoint with queue + active jobs + progress
-   - Batch progress logging for embed chunks
+<!-- /SECTION: what_is_missing -->
+
+---
+
+## Trust Levels
+
+- **(Verified)**: confirmed by running code/tests
+- **(Assumed)**: derived from docs/config, not directly tested
+- **(Unknown)**: needs verification
