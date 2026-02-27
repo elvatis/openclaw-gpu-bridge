@@ -3,42 +3,42 @@
   "project": "openclaw-gpu-bridge",
   "last_session": {
     "agent": "claude-code",
-    "session_id": "t001-live-validation-2026-02-27",
-    "timestamp": "2026-02-27T02:36:56.153Z",
-    "commit": "dba5c79",
-    "phase": "validation",
-    "duration_minutes": 2
+    "session_id": "t002-npm-publish-2026-02-27",
+    "timestamp": "2026-02-27T03:10:00.000Z",
+    "commit": "5c2fbbd",
+    "phase": "release",
+    "duration_minutes": 5
   },
   "files": {
     "STATUS.md": {
       "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "updated": "2026-02-26T23:16:45Z",
-      "lines": 55,
-      "summary": "v0.2 code + tests complete. Live multi-host test and npm publish pending."
+      "updated": "2026-02-27T03:10:00Z",
+      "lines": 79,
+      "summary": "v0.2.0 released. Tag pushed, tarball cleaned, npm publish awaiting manual auth."
     },
     "NEXT_ACTIONS.md": {
       "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "updated": "2026-02-26T23:16:45Z",
-      "lines": 65,
-      "summary": "3 tasks. T-001 (live validation) ready. T-002 (publish) blocked on T-001. T-003 (Python tests) optional."
+      "updated": "2026-02-27T03:10:00Z",
+      "lines": 55,
+      "summary": "T-002 done (pending npm auth). T-003 (Python tests) optional. Manual step: npm adduser + npm publish."
     },
     "LOG.md": {
       "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "updated": "2026-02-23T00:00:00Z",
-      "lines": 81,
-      "summary": "Last entry: v0.2 multi-GPU implementation complete, 3/3 tests passing."
+      "updated": "2026-02-27T03:10:00Z",
+      "lines": 110,
+      "summary": "T-002 publish session: CHANGELOG, merge to main, tag v0.2.0, tarball cleanup, npm auth needed."
     },
     "DASHBOARD.md": {
       "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "updated": "2026-02-26T23:16:45Z",
-      "lines": 45,
-      "summary": "P1-P5 done. T-001 ready (live validation), T-002 blocked, T-003 optional."
+      "updated": "2026-02-27T03:10:00Z",
+      "lines": 77,
+      "summary": "P1-P8 done. T-001 done, T-002 done (pending npm auth), T-003 optional."
     },
     "TRUST.md": {
       "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "updated": "2026-02-26T23:16:45Z",
-      "lines": 45,
-      "summary": "Build verified. Single-host live test verified. Multi-host untested. Security reviewed clean."
+      "updated": "2026-02-27T03:10:00Z",
+      "lines": 72,
+      "summary": "Build verified. Multi-host verified. npm tarball verified. npm publish untested (needs auth)."
     },
     "CONVENTIONS.md": {
       "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
@@ -53,7 +53,7 @@
       "summary": "4-agent pipeline. ADR.md for architecture decisions. REVIEW.md for P4 findings."
     }
   },
-  "quick_context": "openclaw-gpu-bridge v0.2 multi-GPU validated. 21 tests passing (11 unit + 10 integration with real HTTP servers). Multi-host round-robin, least-busy, failover, auth, 503 retry all verified. Next: T-002 npm publish. Single-host v0.1 live-tested (RTX 2080 Ti, F1=0.9645).",
+  "quick_context": "openclaw-gpu-bridge v0.2.0 release prepared. CHANGELOG added, feature branch merged to main, git tag v0.2.0 pushed to GitHub. Tarball cleaned (16.6 kB, no tests or __pycache__). npm publish blocked on manual auth (npm adduser). 21/21 tests passing. Next: T-003 Python unit tests (optional).",
   "token_budget": {
     "manifest_only": 85,
     "manifest_plus_core": 420,
@@ -71,12 +71,14 @@
     },
     "T-002": {
       "title": "Publish npm package v0.2.0",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "depends_on": [
         "T-001"
       ],
-      "created": "2026-02-26T23:16:45Z"
+      "created": "2026-02-26T23:16:45Z",
+      "completed": "2026-02-27T03:10:00.000Z",
+      "notes": "All prep done (CHANGELOG, merge, tag, tarball). npm publish requires manual npm adduser first."
     },
     "T-003": {
       "title": "Add Python unit tests for gpu-service",

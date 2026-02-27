@@ -1,6 +1,6 @@
 # openclaw-gpu-bridge: Current State of the Nation
 
-> Last updated: 2026-02-27 by claude-opus-4.6 (T-001 live multi-host validation)
+> Last updated: 2026-02-27 by claude-opus-4.6 (T-002 npm publish prep)
 >
 > **Rule:** This file is rewritten (not appended) at the end of every session.
 > It reflects the *current* reality, not history. History lives in LOG.md.
@@ -8,7 +8,7 @@
 ---
 
 <!-- SECTION: summary -->
-v0.2 multi-GPU validated with 10 integration tests using real HTTP servers. 21 total tests passing (11 unit + 10 integration). Round-robin, least-busy, failover, auth, 503 retry, and all endpoints verified end-to-end. T-002 npm publish now unblocked.
+v0.2.0 release fully prepared. CHANGELOG.md created, feature branch merged to main, git tag v0.2.0 pushed to GitHub. npm tarball cleaned (16.6 kB, 23 files - no test files or __pycache__). npm publish blocked on manual `npm adduser` authentication. 21/21 tests passing. All code on main.
 <!-- /SECTION: summary -->
 
 <!-- SECTION: build_health -->
@@ -18,6 +18,7 @@ v0.2 multi-GPU validated with 10 integration tests using real HTTP servers. 21 t
 |-------|--------|-------|
 | `npm run build` (TypeScript) | (Verified) | 0 TS errors |
 | `npm test` (Jest) | (Verified) | 21/21 tests passing (11 unit + 10 integration) |
+| `npm pack --dry-run` | (Verified) | 16.6 kB, 23 files, no tests or __pycache__ |
 | `lint` | (Unknown) | Not configured |
 | `type-check` | (Verified) | Included in build |
 
@@ -31,6 +32,7 @@ v0.2 multi-GPU validated with 10 integration tests using real HTTP servers. 21 t
 **Package:** `@elvatis_com/openclaw-gpu-bridge`
 **Repo:** https://github.com/homeofe/openclaw-gpu-bridge
 **Purpose:** Expose remote GPU compute (BERTScore, embeddings) as OpenClaw tools, now with multi-host orchestration.
+**Version:** 0.2.0 (tagged, not yet published to npm)
 
 <!-- /SECTION: project_overview -->
 
@@ -49,9 +51,13 @@ v0.2 multi-GPU validated with 10 integration tests using real HTTP servers. 21 t
 | `openclaw.plugin.json` | (Verified) | v0.2 config schema with hosts[] |
 | `gpu-service/gpu_service.py` | (Verified) | On-demand model loading + cache, /status |
 | `gpu-service/models.py` | (Verified) | Status response models, updated defaults |
+| `package.json` | (Verified) | v0.2.0, clean files[] exclusions |
+| `.npmignore` | (Verified) | Excludes tests, __pycache__, dev files |
+| `CHANGELOG.md` | (Verified) | v0.2.0 and v0.1.0 entries |
 | README | (Verified) | Internet exposure hardening + v0.2 usage |
 | Live multi-host test | (Verified) | Integration tests validate all multi-host scenarios |
-| npm publish | (Unknown) | Not yet published |
+| git tag v0.2.0 | (Verified) | Pushed to GitHub |
+| npm publish | (Blocked) | Requires `npm adduser` on this machine |
 
 <!-- /SECTION: component_status -->
 
@@ -62,7 +68,7 @@ v0.2 multi-GPU validated with 10 integration tests using real HTTP servers. 21 t
 
 | Gap | Severity | GitHub Issue | Description |
 |-----|----------|-------------|-------------|
-| npm publish | HIGH | - | Not yet published to npm registry |
+| npm publish | HIGH | - | Run `npm adduser` then `npm publish --access public` |
 | Python unit tests | MEDIUM | [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | No tests for model-cache and /status |
 | Outdated Dockerfile | MEDIUM | [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | Base image PyTorch 2.2.0 vs required 2.5.0+ |
 | Stale gpu-service README | LOW | [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | Wrong defaults, missing /status endpoint |
@@ -76,3 +82,4 @@ v0.2 multi-GPU validated with 10 integration tests using real HTTP servers. 21 t
 - **(Verified)**: confirmed by running code/tests
 - **(Assumed)**: derived from docs/config, not directly tested
 - **(Unknown)**: needs verification
+- **(Blocked)**: requires manual intervention

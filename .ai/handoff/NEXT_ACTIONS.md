@@ -1,28 +1,19 @@
 # NEXT_ACTIONS - openclaw-gpu-bridge
 
 > Priority order. Work top-down.
-> Updated: 2026-02-26 (AAHP v3 migration)
+> Updated: 2026-02-27 (T-002 publish session)
 
 ---
 
-## T-002: Publish npm package
+## Manual Step: npm publish
 
-**Goal:** Publish `@elvatis_com/openclaw-gpu-bridge` v0.2.0 to npm.
+**The package is ready to publish.** All code is merged to main, tagged v0.2.0, and the tarball is clean.
 
-**Context:**
-- Package name: `@elvatis_com/openclaw-gpu-bridge`
-- T-001 (live validation) completed - unblocked
-
-**What to do:**
-1. Bump version in `package.json` to `0.2.0`
-2. Add CHANGELOG entry for v0.2.0 features
-3. `npm publish --access public` (or scoped access)
-4. Tag release: `git tag v0.2.0 && git push --tags`
-
-**Definition of done:**
-- [ ] Package published to npm
-- [ ] GitHub tag v0.2.0 created
-- [ ] Dashboard updated
+To publish:
+```bash
+npm adduser          # authenticate with npm registry (one-time)
+npm publish --access public
+```
 
 ---
 
@@ -49,6 +40,7 @@
 
 | Item | Resolution |
 |------|-----------|
+| T-002 Publish npm package v0.2.0 | CHANGELOG, merge to main, tag v0.2.0, tarball cleanup. npm auth needed for final publish. |
 | T-001 Live multi-host validation | 10 integration tests with real HTTP servers, 21/21 total passing |
 | Multi-host config (hosts[]) | Implemented in v0.2, 21/21 tests passing |
 | Load balancing (round-robin, least-busy) | Implemented and tested |
@@ -69,3 +61,4 @@
 | Python GPU service | `gpu-service/` |
 | Architecture decisions | `.ai/handoff/ADR.md` |
 | P4 review findings | `.ai/handoff/REVIEW.md` |
+| Changelog | `CHANGELOG.md` |

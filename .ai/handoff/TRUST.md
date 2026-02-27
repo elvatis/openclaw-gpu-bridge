@@ -23,6 +23,7 @@
 | `npm run build` passes | verified | 2026-02-27 | 7d | 2026-03-06 | Opus | 0 TS errors |
 | `npm test` passes | verified | 2026-02-27 | 7d | 2026-03-06 | Opus | 21/21 tests (11 unit + 10 integration) |
 | TypeScript strict mode | verified | 2026-02-23 | 30d | 2026-03-25 | Sonnet | tsconfig strict=true |
+| npm tarball clean | verified | 2026-02-27 | 30d | 2026-03-29 | Opus | 16.6 kB, 23 files, no tests or __pycache__ |
 
 ---
 
@@ -40,12 +41,21 @@
 
 ---
 
+## Release
+
+| Property | Status | Last Verified | TTL | Expires | Agent | Notes |
+|----------|--------|---------------|-----|---------|-------|-------|
+| git tag v0.2.0 on GitHub | verified | 2026-02-27 | 30d | 2026-03-29 | Opus | Pushed to origin |
+| CHANGELOG.md accurate | verified | 2026-02-27 | 30d | 2026-03-29 | Opus | v0.2.0 and v0.1.0 entries |
+| npm package published | untested | - | - | - | - | Requires `npm adduser` then `npm publish --access public` |
+
+---
+
 ## Integrations
 
 | Property | Status | Last Verified | TTL | Expires | Agent | Notes |
 |----------|--------|---------------|-----|---------|-------|-------|
 | OpenClaw plugin install | assumed | 2026-02-25 | 7d | 2026-03-04 | openclaw-ops | openclaw.extensions added |
-| npm package published | untested | - | - | - | - | Not yet published |
 
 ---
 

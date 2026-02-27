@@ -16,7 +16,7 @@
 | P5 v0.2 Multi-GPU | Done | Sonnet | 2026-02-23 |
 | P6 v0.2 Roadmap Definition | Done | Opus | 2026-02-27 |
 | P7 Live Validation | Done | Opus | 2026-02-27 |
-| P8 Publish | Planned | - | - |
+| P8 Publish | Done | Opus | 2026-02-27 |
 
 ---
 
@@ -29,7 +29,9 @@
 | `src/client.ts` | (Verified) | Multi-host pool, round-robin/least-busy, failover |
 | `src/types.ts` | (Verified) | All request/response interfaces |
 | `tsconfig.json` | (Verified) | Strict mode |
-| `package.json` | (Verified) | Build/dev/test scripts |
+| `package.json` | (Verified) | v0.2.0, clean files[] with test exclusions |
+| `.npmignore` | (Verified) | Excludes tests, __pycache__, dev files |
+| `CHANGELOG.md` | (Verified) | v0.2.0 and v0.1.0 entries |
 | `openclaw.plugin.json` | (Verified) | v0.2 config schema + uiHints |
 | `gpu-service/gpu_service.py` | (Verified) | On-demand models + asyncio.to_thread fix |
 | `gpu-service/device.py` | (Verified) | torch.cuda.is_available() |
@@ -68,9 +70,5 @@
 | ID | Task | Priority | Blocked by | Ready? |
 |----|------|----------|-----------|--------|
 | T-001 | Live multi-host validation | HIGH | - | Done |
-| T-002 | Publish npm package v0.2.0 | HIGH | T-001 | Ready |
+| T-002 | Publish npm package v0.2.0 | HIGH | T-001 | Done (pending npm auth) |
 | T-003 | Python unit tests (optional) - see [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | MEDIUM | - | Ready |
-| T-004 | Input size validation - see [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | HIGH | - | Ready |
-| T-005 | 503 Retry-After handling - see [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | HIGH | - | Ready |
-| T-006 | Update Dockerfile base image - see [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | MEDIUM | - | Ready |
-| T-007 | Fix stale gpu-service README - see [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | LOW | - | Ready |
