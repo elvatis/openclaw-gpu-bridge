@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "@elvatis_com/openclaw-gpu-bridge",
   "version": "0.2.0",
   "description": "OpenClaw plugin - Remote GPU compute via FastAPI microservice (BERTScore, embeddings)",
@@ -42,7 +42,7 @@
     "type": "git",
     "url": "git+https://github.com/elvatis/openclaw-gpu-bridge.git"
   },
-  "homepage": "https://github.com/homeofe/openclaw-gpu-bridge#readme",
+  "homepage": "https://github.com/elvatis/openclaw-gpu-bridge#readme",
   "bugs": {
     "url": "https://github.com/elvatis/openclaw-gpu-bridge/issues"
   },

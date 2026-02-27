@@ -1,4 +1,4 @@
-# DASHBOARD - openclaw-gpu-bridge
+﻿# DASHBOARD - openclaw-gpu-bridge
 
 > Single source of truth for build health, test coverage, and pipeline state.
 > Updated by agents at the end of every completed task.
@@ -57,11 +57,11 @@
 
 | Issue | Title | Labels | Priority | Status |
 |-------|-------|--------|----------|--------|
-| [#1](https://github.com/homeofe/openclaw-gpu-bridge/issues/1) | Add input size validation to prevent GPU OOM on large batches | enhancement | HIGH | Open |
-| [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | Add Python unit tests for gpu-service (pytest) | enhancement | MEDIUM | Done |
-| [#3](https://github.com/homeofe/openclaw-gpu-bridge/issues/3) | TS client should honor Retry-After header on 503 responses | bug | HIGH | Open |
-| [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | Dockerfile uses outdated PyTorch base image (2.2.0 vs required 2.5.0+) | bug | MEDIUM | Done |
-| [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | gpu-service README has stale defaults and missing /status endpoint | documentation | LOW | Done |
+| [#1](https://github.com/elvatis/openclaw-gpu-bridge/issues/1) | Add input size validation to prevent GPU OOM on large batches | enhancement | HIGH | Open |
+| [#2](https://github.com/elvatis/openclaw-gpu-bridge/issues/2) | Add Python unit tests for gpu-service (pytest) | enhancement | MEDIUM | Done |
+| [#3](https://github.com/elvatis/openclaw-gpu-bridge/issues/3) | TS client should honor Retry-After header on 503 responses | bug | HIGH | Open |
+| [#4](https://github.com/elvatis/openclaw-gpu-bridge/issues/4) | Dockerfile uses outdated PyTorch base image (2.2.0 vs required 2.5.0+) | bug | MEDIUM | Done |
+| [#5](https://github.com/elvatis/openclaw-gpu-bridge/issues/5) | gpu-service README has stale defaults and missing /status endpoint | documentation | LOW | Done |
 
 ---
 

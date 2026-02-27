@@ -1,4 +1,4 @@
-{
+﻿{
   "aahp_version": "3.0",
   "project": "openclaw-gpu-bridge",
   "last_session": {
@@ -93,7 +93,7 @@
       "priority": "high",
       "depends_on": [],
       "created": "2026-02-27T08:40:56Z",
-      "github_issue": "https://github.com/homeofe/openclaw-gpu-bridge/issues/4",
+      "github_issue": "https://github.com/elvatis/openclaw-gpu-bridge/issues/4",
       "completed": "2026-02-27T07:44:55.791Z"
     },
     "T-005": {
@@ -102,7 +102,7 @@
       "priority": "medium",
       "depends_on": [],
       "created": "2026-02-27T08:40:56Z",
-      "github_issue": "https://github.com/homeofe/openclaw-gpu-bridge/issues/5",
+      "github_issue": "https://github.com/elvatis/openclaw-gpu-bridge/issues/5",
       "completed": "2026-02-27T07:58:42.788Z"
     }
   }

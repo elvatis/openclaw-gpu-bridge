@@ -1,4 +1,4 @@
-# openclaw-gpu-bridge: Current State of the Nation
+﻿# openclaw-gpu-bridge: Current State of the Nation
 
 > Last updated: 2026-02-27 by claude-opus-4.6 (T-002 npm publish prep)
 >
@@ -30,7 +30,7 @@ v0.2.0 release fully prepared. CHANGELOG.md created, feature branch merged to ma
 ## Project Overview
 
 **Package:** `@elvatis_com/openclaw-gpu-bridge`
-**Repo:** https://github.com/homeofe/openclaw-gpu-bridge
+**Repo:** https://github.com/elvatis/openclaw-gpu-bridge
 **Purpose:** Expose remote GPU compute (BERTScore, embeddings) as OpenClaw tools, now with multi-host orchestration.
 **Version:** 0.2.0 (tagged, not yet published to npm)
 
@@ -69,9 +69,9 @@ v0.2.0 release fully prepared. CHANGELOG.md created, feature branch merged to ma
 | Gap | Severity | GitHub Issue | Description |
 |-----|----------|-------------|-------------|
 | npm publish | HIGH | - | Run `npm adduser` then `npm publish --access public` |
-| Python unit tests | MEDIUM | [#2](https://github.com/homeofe/openclaw-gpu-bridge/issues/2) | No tests for model-cache and /status |
-| Outdated Dockerfile | MEDIUM | [#4](https://github.com/homeofe/openclaw-gpu-bridge/issues/4) | Base image PyTorch 2.2.0 vs required 2.5.0+ |
-| Stale gpu-service README | LOW | [#5](https://github.com/homeofe/openclaw-gpu-bridge/issues/5) | Wrong defaults, missing /status endpoint |
+| Python unit tests | MEDIUM | [#2](https://github.com/elvatis/openclaw-gpu-bridge/issues/2) | No tests for model-cache and /status |
+| Outdated Dockerfile | MEDIUM | [#4](https://github.com/elvatis/openclaw-gpu-bridge/issues/4) | Base image PyTorch 2.2.0 vs required 2.5.0+ |
+| Stale gpu-service README | LOW | [#5](https://github.com/elvatis/openclaw-gpu-bridge/issues/5) | Wrong defaults, missing /status endpoint |
 
 <!-- /SECTION: what_is_missing -->
 

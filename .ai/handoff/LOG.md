@@ -1,4 +1,4 @@
-# openclaw-gpu-bridge - Log
+﻿# openclaw-gpu-bridge - Log
 
 ## 2026-02-27 - T-002 Publish npm Package v0.2.0 (Opus)
 
@@ -71,7 +71,7 @@
 
 ## 2026-02-22 - Project Initialized
 
-- Repo cloned from github.com/homeofe/openclaw-gpu-bridge
+- Repo cloned from github.com/elvatis/openclaw-gpu-bridge
 - AAHP handoff structure created
 - README.md written with architecture + config schema
 - Context: spawned from BMAS metrics pipeline running BERTScore on CPU (slow); Emre wants to offload to GPU PC on local network
