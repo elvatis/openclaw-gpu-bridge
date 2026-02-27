@@ -1,0 +1,23 @@
+# Tests
+src/
+*.test.js
+*.test.d.ts
+*.test.js.map
+jest.config.cjs
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Dev/CI
+.ai/
+.git/
+.gitignore
+.vscode/
+.env
+.env.*
+CHANGELOG.md
+SKILL.md
+tsconfig.json
+node_modules/

@@ -6,7 +6,9 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist/",
+    "!dist/**/*.test.*",
     "gpu-service/",
+    "!gpu-service/__pycache__/",
     "openclaw.plugin.json",
     "README.md"
   ],
