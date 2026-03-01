@@ -1,7 +1,7 @@
 # NEXT_ACTIONS - openclaw-gpu-bridge
 
 > Priority order. Work top-down.
-> Updated: 2026-03-01 (T-004 verified done)
+> Updated: 2026-03-01 (T-005 confirmed done)
 
 ---
 
@@ -9,36 +9,13 @@
 
 | Status | Count |
 |--------|-------|
-| Done | 4 |
-| Ready | 4 |
+| Done | 5 |
+| Ready | 3 |
 | Blocked | 0 |
 
 ---
 
 ## Ready - Work These Next
-
-### T-005 [high]: Dockerfile uses outdated PyTorch base image (2.2.0 vs required 2.5.0+)
-
-**Goal:** Update the Dockerfile to use a PyTorch 2.5.0+ base image matching requirements.txt.
-
-**Context:**
-- `gpu-service/Dockerfile` uses `pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime`
-- `requirements.txt` specifies `torch>=2.5.0`, causing a conflict inside the container
-- Python 3.13 support requires torch 2.5.0+
-
-**What to do:**
-1. Update `gpu-service/Dockerfile` base image to a PyTorch 2.5.0+ CUDA image
-2. Verify the Dockerfile builds successfully
-3. Update any related documentation
-
-**Files:** `gpu-service/Dockerfile`, `gpu-service/requirements.txt`
-
-**Definition of done:**
-- Dockerfile base image uses PyTorch 2.5.0+
-- `docker build` succeeds (or at minimum, no version conflict in pip install)
-- GitHub issue #4 closed
-
----
 
 ### T-006 [high]: TS client should honor Retry-After header on 503 responses
 
@@ -122,6 +99,7 @@
 
 | Task | Date | Resolution |
 |------|------|-----------|
+| T-005 Dockerfile PyTorch base image update | 2026-03-01 | Updated to pytorch/pytorch:2.5.1-cuda12.1-cudnn9-runtime in commit 4c9c067. GitHub issue #4 closed. |
 | T-004 gpu-service README stale defaults | 2026-03-01 | Verified already correct - BERTScore model, /status endpoint, env vars all accurate |
 | T-003 Add Python unit tests for gpu-service | 2026-02-27 | pytest test suite created with full endpoint coverage |
 | T-002 Publish npm package v0.2.0 | 2026-02-27 | CHANGELOG, merge to main, tag v0.2.0, tarball cleanup. npm auth needed for final publish. |

@@ -3,9 +3,9 @@
   "project": "openclaw-gpu-bridge",
   "last_session": {
     "agent": "claude-code",
-    "session_id": "t004-readme-verify-2026-03-01",
-    "timestamp": "2026-03-01T12:00:00.000Z",
-    "commit": "2d0c4bf",
+    "session_id": "t005-dockerfile-pytorch-2026-03-01",
+    "timestamp": "2026-03-01T14:00:00.000Z",
+    "commit": "4c9c067",
     "phase": "done",
     "duration_minutes": 3
   },
@@ -53,7 +53,7 @@
       "summary": "4-agent pipeline. ADR.md for architecture decisions. REVIEW.md for P4 findings."
     }
   },
-  "quick_context": "openclaw-gpu-bridge v0.2.0. T-001 through T-004 done. T-004 verified gpu-service/README.md already correct (BERTScore model, /status endpoint, env vars all accurate). Remaining: T-005 Dockerfile PyTorch update, T-006 Retry-After header, T-007 Python tests, T-008 OOM validation. 21 Jest tests passing.",
+  "quick_context": "openclaw-gpu-bridge v0.2.0. T-001 through T-005 done. T-005 Dockerfile already updated to PyTorch 2.5.1 in commit 4c9c067 (cuDNN 9, CUDA 12.1 retained). Remaining: T-006 Retry-After header, T-007 Python tests, T-008 OOM validation. 21 Jest tests passing.",
   "token_budget": {
     "manifest_only": 85,
     "manifest_plus_core": 420,
@@ -93,20 +93,21 @@
       "priority": "low",
       "depends_on": [],
       "created": "2026-03-01T12:58:50.706Z",
-      "completed": "2026-03-01T12:00:00.000Z",
-      "notes": "Verified README already correct: BERTScore model is microsoft/deberta-xlarge-mnli, /status endpoint listed, all env vars present. Fixes were applied in a previous session.",
+      "notes": "## Problem\n\nThe `gpu-service/README.md` has several inaccuracies compared to the actual code:\n\n1. **Stale BERTScore default model** - README says `roberta-large` but `gpu_service.py` defaults to `microsoft/deberta-xlarge-mnli` (changed in v0.2)\n2. **Missing /status endpoint** - The endpoints table lists only `/health`, `/info`, `/bertscore`, `/embed` but the code has a `/status` endpoint added in v0.2\n3. **MODEL_BERTSCORE default mismatch** - Environment variables table says `roberta-large` but ",
       "github_issue": 5,
-      "github_repo": "elvatis/openclaw-gpu-bridge"
+      "github_repo": "elvatis/openclaw-gpu-bridge",
+      "completed": "2026-03-01T13:03:05.959Z"
     },
     "T-005": {
       "title": "Dockerfile uses outdated PyTorch base image (2.2.0 vs required 2.5.0+)",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "depends_on": [],
       "created": "2026-03-01T12:58:50.706Z",
       "notes": "## Problem\n\nThe `gpu-service/Dockerfile` uses `pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime` as its base image, but `requirements.txt` specifies `torch>=2.5.0`. This creates a version conflict:\n\n- The base image ships PyTorch 2.2.0\n- `pip install -r requirements.txt` will try to upgrade torch to 2.5.0+ inside the container, which defeats the purpose of using the official PyTorch image\n- Python 3.13 support requires torch 2.5.0+ (documented in requirements.txt comments)\n\nAdditionally, the `gpu-s",
       "github_issue": 4,
-      "github_repo": "elvatis/openclaw-gpu-bridge"
+      "github_repo": "elvatis/openclaw-gpu-bridge",
+      "completed": "2026-03-01T14:00:00.000Z"
     },
     "T-006": {
       "title": "TS client should honor Retry-After header on 503 responses",
