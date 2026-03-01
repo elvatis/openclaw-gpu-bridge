@@ -4,10 +4,10 @@
   "last_session": {
     "agent": "claude-code",
     "session_id": "t005-dockerfile-pytorch-2026-03-01",
-    "timestamp": "2026-03-01T14:00:00.000Z",
+    "timestamp": "2026-03-01T13:33:56.383Z",
     "commit": "4c9c067",
     "phase": "done",
-    "duration_minutes": 3
+    "duration_minutes": 2
   },
   "files": {
     "STATUS.md": {
@@ -107,37 +107,40 @@
       "notes": "## Problem\n\nThe `gpu-service/Dockerfile` uses `pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime` as its base image, but `requirements.txt` specifies `torch>=2.5.0`. This creates a version conflict:\n\n- The base image ships PyTorch 2.2.0\n- `pip install -r requirements.txt` will try to upgrade torch to 2.5.0+ inside the container, which defeats the purpose of using the official PyTorch image\n- Python 3.13 support requires torch 2.5.0+ (documented in requirements.txt comments)\n\nAdditionally, the `gpu-s",
       "github_issue": 4,
       "github_repo": "elvatis/openclaw-gpu-bridge",
-      "completed": "2026-03-01T14:00:00.000Z"
+      "completed": "2026-03-01T13:33:56.383Z"
     },
     "T-006": {
       "title": "TS client should honor Retry-After header on 503 responses",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "depends_on": [],
       "created": "2026-03-01T12:58:50.706Z",
       "notes": "## Problem\n\nThe GPU service returns HTTP 503 with a `Retry-After: 5` header when the concurrency semaphore is full (all GPU slots busy). However, the TypeScript client in `client.ts` treats 503 the same as any other error - it marks the host as unhealthy and fails over to the next host.\n\nThis is incorrect behavior because:\n- A 503 with Retry-After means the host is alive but temporarily busy - it should NOT be marked unhealthy\n- If all hosts return 503, the client throws \"All GPU hosts failed\" i",
       "github_issue": 3,
-      "github_repo": "elvatis/openclaw-gpu-bridge"
+      "github_repo": "elvatis/openclaw-gpu-bridge",
+      "completed": "2026-03-01T14:20:00.000Z"
     },
     "T-007": {
       "title": "Add Python unit tests for gpu-service (pytest)",
-      "status": "ready",
+      "status": "done",
       "priority": "medium",
       "depends_on": [],
       "created": "2026-03-01T12:58:50.706Z",
       "notes": "## Problem\n\nThe Python GPU service (`gpu-service/`) has zero test coverage. The TypeScript plugin has 3 Jest tests covering multi-host logic, but the Python service - which handles all GPU compute, model caching, concurrency, and auth - is untested.\n\nThis gap is tracked in STATUS.md, DASHBOARD.md, and NEXT_ACTIONS.md (T-003) as a known deficiency.\n\n## Proposed Solution\n\nCreate a pytest test suite covering the critical paths:\n\n1. **Endpoint response shapes** - `/health`, `/info`, `/status`, `/ber",
       "github_issue": 2,
-      "github_repo": "elvatis/openclaw-gpu-bridge"
+      "github_repo": "elvatis/openclaw-gpu-bridge",
+      "completed": "2026-03-01T14:20:00.000Z"
     },
     "T-008": {
       "title": "Add input size validation to prevent GPU OOM on large batches",
-      "status": "ready",
+      "status": "done",
       "priority": "medium",
       "depends_on": [],
       "created": "2026-03-01T12:58:50.706Z",
       "notes": "## Problem\n\nThe `/bertscore` and `/embed` endpoints accept arbitrarily large input arrays (`candidates`, `references`, `texts`) with no upper bound validation. Very large batches (e.g. 10,000+ text pairs) can exhaust GPU VRAM and cause an out-of-memory crash, bringing down the entire service.\n\nThis was flagged in the P4 code review (`.ai/handoff/REVIEW.md`, Minor Note #1) as acceptable for v0.1 LAN-only usage but recommended for v0.2.\n\n## Proposed Solution\n\n1. Add `MAX_BERTSCORE_PAIRS` (default:",
       "github_issue": 1,
-      "github_repo": "elvatis/openclaw-gpu-bridge"
+      "github_repo": "elvatis/openclaw-gpu-bridge",
+      "completed": "2026-03-01T14:20:00.000Z"
     }
   }
 }
