@@ -57,3 +57,8 @@ _No open tasks. All v0.2 features are complete and issues closed._
 | Architecture decisions | `.ai/handoff/ADR.md` |
 | P4 review findings | `.ai/handoff/REVIEW.md` |
 | Changelog | `CHANGELOG.md` |
+
+## ⚠️ Version Sync Rule
+**ALWAYS keep `package.json` and `openclaw.plugin.json` versions in sync.**
+When bumping a version, update BOTH files. Mismatched versions cause plugin loading failures and npm/ClawHub publish inconsistencies.
+
