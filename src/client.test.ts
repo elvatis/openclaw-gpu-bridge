@@ -1,12 +1,13 @@
 import { GpuBridgeClient, InputValidationError } from "./client";
+import { vi } from 'vitest'
 
 describe("GpuBridgeClient multi-host", () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test("supports v0.1 fallback config via serviceUrl", async () => {
-    const fetchMock = jest.fn().mockResolvedValue({
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ status: "ok", device: "cuda" }),
     });
@@ -20,7 +21,7 @@ describe("GpuBridgeClient multi-host", () => {
   });
 
   test("fails over to next host when first host is down", async () => {
-    const fetchMock = jest.fn(async (url: string) => {
+    const fetchMock = vi.fn(async (url: string) => {
       if (url === "http://host-a:8765/health") {
         throw new Error("ECONNREFUSED");
       }
@@ -44,7 +45,7 @@ describe("GpuBridgeClient multi-host", () => {
   });
 
   test("least-busy selects host with lower VRAM utilization", async () => {
-    const fetchMock = jest.fn(async (url: string) => {
+    const fetchMock = vi.fn(async (url: string) => {
       if (url === "http://host-a:8765/info") {
         return {
           ok: true,
@@ -88,11 +89,11 @@ describe("GpuBridgeClient multi-host", () => {
 
 describe("GpuBridgeClient input validation", () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test("rejects embed batch exceeding maxBatchSize", async () => {
-    const fetchMock = jest.fn().mockResolvedValue({
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ status: "ok", device: "cuda" }),
     });
@@ -113,7 +114,7 @@ describe("GpuBridgeClient input validation", () => {
   });
 
   test("rejects bertscore batch exceeding maxBatchSize", async () => {
-    const fetchMock = jest.fn().mockResolvedValue({
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ status: "ok", device: "cuda" }),
     });
@@ -140,7 +141,7 @@ describe("GpuBridgeClient input validation", () => {
   });
 
   test("rejects text exceeding maxTextLength", async () => {
-    const fetchMock = jest.fn().mockResolvedValue({
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ status: "ok", device: "cuda" }),
     });
@@ -162,7 +163,7 @@ describe("GpuBridgeClient input validation", () => {
   });
 
   test("allows requests within configured limits", async () => {
-    const fetchMock = jest.fn().mockResolvedValue({
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ embeddings: [[1, 2]], model: "all-MiniLM-L6-v2", dimensions: 2 }),
     });
@@ -178,7 +179,7 @@ describe("GpuBridgeClient input validation", () => {
   });
 
   test("uses default limits (100 items, 10000 chars) when not configured", async () => {
-    const fetchMock = jest.fn().mockResolvedValue({
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ embeddings: [[1]], model: "all-MiniLM-L6-v2", dimensions: 1 }),
     });
@@ -199,12 +200,12 @@ describe("GpuBridgeClient input validation", () => {
 
 describe("GpuBridgeClient Retry-After on 503", () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test("retries on 503 with Retry-After header and succeeds", async () => {
     let embedCallCount = 0;
-    const fetchMock = jest.fn(async (url: string, _init?: RequestInit) => {
+    const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
       if ((url as string).endsWith("/health")) {
         return { ok: true, json: async () => ({ status: "ok", device: "cuda" }) };
       }
@@ -240,7 +241,7 @@ describe("GpuBridgeClient Retry-After on 503", () => {
   });
 
   test("marks host unhealthy after exhausting 503 retries", async () => {
-    const fetchMock = jest.fn(async (url: string, _init?: RequestInit) => {
+    const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
       if ((url as string).endsWith("/health")) {
         return { ok: true, json: async () => ({ status: "ok", device: "cuda" }) };
       }
@@ -263,7 +264,7 @@ describe("GpuBridgeClient Retry-After on 503", () => {
 
   test("does not mark host unhealthy on first 503 when Retry-After is present", async () => {
     let embedCallCount = 0;
-    const fetchMock = jest.fn(async (url: string, _init?: RequestInit) => {
+    const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
       if ((url as string).endsWith("/health")) {
         return { ok: true, json: async () => ({ status: "ok", device: "cuda" }) };
       }
