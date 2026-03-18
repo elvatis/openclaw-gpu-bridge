@@ -38,7 +38,7 @@
     "roberta"
   ],
   "author": "Elvatis <emre.kohler@elvatis.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/elvatis/openclaw-gpu-bridge.git"
